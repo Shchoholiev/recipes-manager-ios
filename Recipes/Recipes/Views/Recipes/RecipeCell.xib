@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="RecipeCell" customModule="Recipes" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3gc-Fe-3Jr">
+                        <rect key="frame" x="0.0" y="4" width="320" height="62"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3F2-5l-f9l">
+                                <rect key="frame" x="0.0" y="-1.3333333333333357" width="70" height="65.333333333333343"/>
+                                <color key="tintColor" systemColor="opaqueSeparatorColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="ZZr-bj-cuT"/>
+                                </constraints>
+                                <imageReference key="image" image="photo" catalog="system" symbolScale="large"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bIJ-HS-dbj">
+                                <rect key="frame" x="80" y="8" width="232" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7yu-Pi-KmB">
+                                <rect key="frame" x="80" y="37" width="232" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="62" id="10x-BH-5hl"/>
+                            <constraint firstItem="bIJ-HS-dbj" firstAttribute="top" secondItem="3gc-Fe-3Jr" secondAttribute="top" constant="8" id="1kR-JD-P20"/>
+                            <constraint firstAttribute="bottom" secondItem="3F2-5l-f9l" secondAttribute="bottom" id="Cot-Uk-4Hx"/>
+                            <constraint firstAttribute="trailing" secondItem="7yu-Pi-KmB" secondAttribute="trailing" constant="8" id="O5e-Fg-gVm"/>
+                            <constraint firstItem="3F2-5l-f9l" firstAttribute="top" secondItem="3gc-Fe-3Jr" secondAttribute="top" id="PhN-cC-8LV"/>
+                            <constraint firstItem="3F2-5l-f9l" firstAttribute="leading" secondItem="3gc-Fe-3Jr" secondAttribute="leading" id="RWf-ok-gFq"/>
+                            <constraint firstItem="bIJ-HS-dbj" firstAttribute="leading" secondItem="3F2-5l-f9l" secondAttribute="trailing" constant="10" id="WO9-k7-N6z"/>
+                            <constraint firstAttribute="bottom" secondItem="7yu-Pi-KmB" secondAttribute="bottom" constant="8" id="caD-Hd-4Of"/>
+                            <constraint firstItem="7yu-Pi-KmB" firstAttribute="leading" secondItem="3F2-5l-f9l" secondAttribute="trailing" constant="10" id="g90-Be-crG"/>
+                            <constraint firstAttribute="trailing" secondItem="bIJ-HS-dbj" secondAttribute="trailing" constant="8" id="vPO-lD-ylT"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="3gc-Fe-3Jr" secondAttribute="trailing" id="BcS-G8-034"/>
+                    <constraint firstAttribute="bottom" secondItem="3gc-Fe-3Jr" secondAttribute="bottom" constant="4" id="LBv-am-d9m"/>
+                    <constraint firstItem="3gc-Fe-3Jr" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="oZn-fk-jNq"/>
+                    <constraint firstItem="3gc-Fe-3Jr" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="tCT-nv-VUA"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="recipeCategory" destination="7yu-Pi-KmB" id="lEv-io-A8Z"/>
+                <outlet property="recipeName" destination="bIJ-HS-dbj" id="cTe-Vk-5Vv"/>
+                <outlet property="recipeWrapper" destination="3gc-Fe-3Jr" id="X99-0G-Ysa"/>
+                <outlet property="thumbnail" destination="3F2-5l-f9l" id="osC-k8-zAM"/>
+            </connections>
+            <point key="canvasLocation" x="26.153846153846153" y="20.616113744075829"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="photo" catalog="system" width="128" height="93"/>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
