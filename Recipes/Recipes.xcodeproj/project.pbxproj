@@ -10,6 +10,11 @@
 		90118352294A19730081254C /* old.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90118351294A19730081254C /* old.storyboard */; };
 		90179DEB295A344D003F1800 /* AddRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90179DEA295A344D003F1800 /* AddRecipeViewController.swift */; };
 		901EE70B2948210600B5EBBA /* RecipesByCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901EE70A2948210600B5EBBA /* RecipesByCategoryViewController.swift */; };
+		902D24FA2A0FEEB300C1C99B /* GraphQlClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D24F92A0FEEB300C1C99B /* GraphQlClient.swift */; };
+		902D24FC2A0FF22500C1C99B /* GraphQlRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D24FB2A0FF22500C1C99B /* GraphQlRequest.swift */; };
+		902D24FE2A0FF6AC00C1C99B /* GraphQlResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D24FD2A0FF6AC00C1C99B /* GraphQlResponse.swift */; };
+		902D25002A10101C00C1C99B /* TokensModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D24FF2A10101C00C1C99B /* TokensModel.swift */; };
+		902D25022A101C2400C1C99B /* GraphQlGenericResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */; };
 		9034060D29AC362F000F3150 /* HealthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9034060C29AC362F000F3150 /* HealthService.swift */; };
 		9084E828297D9F9700A08F28 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */; };
 		90A259A3293FF4050017E68B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A259A2293FF4050017E68B /* AppDelegate.swift */; };
@@ -42,6 +47,11 @@
 		90118351294A19730081254C /* old.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = old.storyboard; sourceTree = "<group>"; };
 		90179DEA295A344D003F1800 /* AddRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeViewController.swift; sourceTree = "<group>"; };
 		901EE70A2948210600B5EBBA /* RecipesByCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesByCategoryViewController.swift; sourceTree = "<group>"; };
+		902D24F92A0FEEB300C1C99B /* GraphQlClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQlClient.swift; sourceTree = "<group>"; };
+		902D24FB2A0FF22500C1C99B /* GraphQlRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQlRequest.swift; sourceTree = "<group>"; };
+		902D24FD2A0FF6AC00C1C99B /* GraphQlResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQlResponse.swift; sourceTree = "<group>"; };
+		902D24FF2A10101C00C1C99B /* TokensModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokensModel.swift; sourceTree = "<group>"; };
+		902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQlGenericResponse.swift; sourceTree = "<group>"; };
 		9034060C29AC362F000F3150 /* HealthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthService.swift; sourceTree = "<group>"; };
 		9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		90A2599F293FF4050017E68B /* Recipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +93,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		902D24F82A0FEE8C00C1C99B /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				902D24F92A0FEEB300C1C99B /* GraphQlClient.swift */,
+				902D24FB2A0FF22500C1C99B /* GraphQlRequest.swift */,
+				902D24FD2A0FF6AC00C1C99B /* GraphQlResponse.swift */,
+				902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		90A25996293FF4050017E68B = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +123,7 @@
 		90A259A1293FF4050017E68B /* Recipes */ = {
 			isa = PBXGroup;
 			children = (
+				902D24F82A0FEE8C00C1C99B /* Network */,
 				90A259B8293FF9830017E68B /* Models */,
 				90A259B9293FF98B0017E68B /* Services */,
 				90A259B7293FF9760017E68B /* Controllers */,
@@ -147,6 +169,7 @@
 				90A259C0293FFB9D0017E68B /* Recipe.swift */,
 				90A259CD294040570017E68B /* PaginationWrapper.swift */,
 				90DACF392960AEA7001468D1 /* ImageInfo.swift */,
+				902D24FF2A10101C00C1C99B /* TokensModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -267,9 +290,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				90179DEB295A344D003F1800 /* AddRecipeViewController.swift in Sources */,
+				902D24FC2A0FF22500C1C99B /* GraphQlRequest.swift in Sources */,
+				902D24FE2A0FF6AC00C1C99B /* GraphQlResponse.swift in Sources */,
 				90C6E77E298341FB000F5B5E /* UIViewControllerExtensions.swift in Sources */,
 				90A259D629466EF70017E68B /* RecipeCell.swift in Sources */,
 				90A259C5293FFCC20017E68B /* ServiceBase.swift in Sources */,
+				902D24FA2A0FEEB300C1C99B /* GraphQlClient.swift in Sources */,
 				90A259D229466A6D0017E68B /* TabBarController.swift in Sources */,
 				9034060D29AC362F000F3150 /* HealthService.swift in Sources */,
 				90A259A7293FF4050017E68B /* CategoriesViewController.swift in Sources */,
@@ -278,8 +304,10 @@
 				9084E828297D9F9700A08F28 /* ChooseCategoryViewController.swift in Sources */,
 				90A259C1293FFB9D0017E68B /* Recipe.swift in Sources */,
 				90A259A5293FF4050017E68B /* SceneDelegate.swift in Sources */,
+				902D25002A10101C00C1C99B /* TokensModel.swift in Sources */,
 				90A259BB293FF9AE0017E68B /* Category.swift in Sources */,
 				90A259C3293FFC290017E68B /* RecipesService.swift in Sources */,
+				902D25022A101C2400C1C99B /* GraphQlGenericResponse.swift in Sources */,
 				90DACF3A2960AEA7001468D1 /* ImageInfo.swift in Sources */,
 				90C6E7882984B90D000F5B5E /* CategoryChooseCell.swift in Sources */,
 				90A259DC29468A9E0017E68B /* UIViewClickExstension.swift in Sources */,
