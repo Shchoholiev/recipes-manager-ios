@@ -15,27 +15,8 @@ class JwtTokensService {
     let refreshTokenIdentifier = "refreshToken"
     
     func storeTokensInKeychain(tokens: TokensModel) {
-        let accessTokenQuery: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: refreshTokenIdentifier,
-            kSecValueData as String: tokens.refreshToken.data(using: .utf8)!
-        ]
-        
-        let refreshTokenQuery: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: accessTokenIdentifier,
-            kSecValueData as String: tokens.accessToken.data(using: .utf8)!,
-        ]
-        
-        let accessStatus = SecItemAdd(accessTokenQuery as CFDictionary, nil)
-        if accessStatus != errSecSuccess {
-            print("Error storing Access Token in Keychain")
-        }
-
-        let refreshStatus = SecItemAdd(refreshTokenQuery as CFDictionary, nil)
-        if refreshStatus != errSecSuccess {
-            print("Error storing Refresh Token in Keychain")
-        }
+        storeTokenInKeychain(accessTokenIdentifier, tokens.accessToken)
+        storeTokenInKeychain(refreshTokenIdentifier, tokens.refreshToken)
     }
     
     func isExpired() -> Bool {
@@ -79,7 +60,7 @@ class JwtTokensService {
     private func getTokenFromKeychain(_ identifier: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: identifier,
+            kSecAttrAccount as String: identifier,
             kSecReturnData as String: kCFBooleanTrue!,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
@@ -90,10 +71,40 @@ class JwtTokensService {
         if status == errSecSuccess,
             let data = result as? Data,
             let value = String(data: data, encoding: .utf8) {
-            
+
             return value
         } else {
             return nil
+        }
+    }
+    
+    private func storeTokenInKeychain(_ identifier: String, _ value: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: identifier,
+            kSecValueData as String: value.data(using: .utf8)!
+        ]
+        
+        let status = SecItemAdd(query as CFDictionary, nil)
+        
+        if status != errSecSuccess {
+            if status == errSecDuplicateItem {
+                let updateQuery: [String: Any] = [
+                    kSecClass as String: kSecClassGenericPassword,
+                    kSecAttrAccount as String: identifier
+                ]
+                
+                let attributes: [String: Any] = [
+                    kSecValueData as String: value.data(using: .utf8)!
+                ]
+                
+                let updateStatus = SecItemUpdate(updateQuery as CFDictionary, attributes as CFDictionary)
+                if updateStatus != errSecSuccess {
+                    print("Error updating value of: \"\(identifier)\" in Keychain")
+                }
+            } else {
+                print("Error storing value of: \"\(identifier)\" in Keychain")
+            }
         }
     }
 }
