@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90069F1C2A10384000D76D6F /* JwtTokensService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90069F1B2A10384000D76D6F /* JwtTokensService.swift */; };
+		90069F1E2A10392700D76D6F /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90069F1D2A10392700D76D6F /* HttpClient.swift */; };
+		90069F212A103DA800D76D6F /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 90069F202A103DA800D76D6F /* JWTDecode */; };
+		90069F232A105AD600D76D6F /* RestClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90069F222A105AD600D76D6F /* RestClient.swift */; };
 		90118352294A19730081254C /* old.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 90118351294A19730081254C /* old.storyboard */; };
 		90179DEB295A344D003F1800 /* AddRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90179DEA295A344D003F1800 /* AddRecipeViewController.swift */; };
 		901EE70B2948210600B5EBBA /* RecipesByCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 901EE70A2948210600B5EBBA /* RecipesByCategoryViewController.swift */; };
@@ -44,6 +48,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		90069F1B2A10384000D76D6F /* JwtTokensService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JwtTokensService.swift; sourceTree = "<group>"; };
+		90069F1D2A10392700D76D6F /* HttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		90069F222A105AD600D76D6F /* RestClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestClient.swift; sourceTree = "<group>"; };
 		90118351294A19730081254C /* old.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = old.storyboard; sourceTree = "<group>"; };
 		90179DEA295A344D003F1800 /* AddRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRecipeViewController.swift; sourceTree = "<group>"; };
 		901EE70A2948210600B5EBBA /* RecipesByCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesByCategoryViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90069F212A103DA800D76D6F /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,9 +105,12 @@
 			isa = PBXGroup;
 			children = (
 				902D24F92A0FEEB300C1C99B /* GraphQlClient.swift */,
+				90069F1B2A10384000D76D6F /* JwtTokensService.swift */,
 				902D24FB2A0FF22500C1C99B /* GraphQlRequest.swift */,
 				902D24FD2A0FF6AC00C1C99B /* GraphQlResponse.swift */,
 				902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */,
+				90069F1D2A10392700D76D6F /* HttpClient.swift */,
+				90069F222A105AD600D76D6F /* RestClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -231,6 +242,9 @@
 			dependencies = (
 			);
 			name = Recipes;
+			packageProductDependencies = (
+				90069F202A103DA800D76D6F /* JWTDecode */,
+			);
 			productName = Recipes;
 			productReference = 90A2599F293FF4050017E68B /* Recipes.app */;
 			productType = "com.apple.product-type.application";
@@ -259,6 +273,9 @@
 				Base,
 			);
 			mainGroup = 90A25996293FF4050017E68B;
+			packageReferences = (
+				90069F1F2A103DA800D76D6F /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
+			);
 			productRefGroup = 90A259A0293FF4050017E68B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -290,14 +307,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				90179DEB295A344D003F1800 /* AddRecipeViewController.swift in Sources */,
+				90069F1C2A10384000D76D6F /* JwtTokensService.swift in Sources */,
 				902D24FC2A0FF22500C1C99B /* GraphQlRequest.swift in Sources */,
 				902D24FE2A0FF6AC00C1C99B /* GraphQlResponse.swift in Sources */,
+				90069F232A105AD600D76D6F /* RestClient.swift in Sources */,
 				90C6E77E298341FB000F5B5E /* UIViewControllerExtensions.swift in Sources */,
 				90A259D629466EF70017E68B /* RecipeCell.swift in Sources */,
 				90A259C5293FFCC20017E68B /* ServiceBase.swift in Sources */,
 				902D24FA2A0FEEB300C1C99B /* GraphQlClient.swift in Sources */,
 				90A259D229466A6D0017E68B /* TabBarController.swift in Sources */,
 				9034060D29AC362F000F3150 /* HealthService.swift in Sources */,
+				90069F1E2A10392700D76D6F /* HttpClient.swift in Sources */,
 				90A259A7293FF4050017E68B /* CategoriesViewController.swift in Sources */,
 				90A259A3293FF4050017E68B /* AppDelegate.swift in Sources */,
 				90A259D0294664500017E68B /* RecipesViewController.swift in Sources */,
@@ -534,6 +554,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		90069F1F2A103DA800D76D6F /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		90069F202A103DA800D76D6F /* JWTDecode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90069F1F2A103DA800D76D6F /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
+			productName = JWTDecode;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 90A25997293FF4050017E68B /* Project object */;
 }

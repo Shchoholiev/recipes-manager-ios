@@ -9,11 +9,11 @@ import Foundation
 
 class TokensModel: Codable {
     
-    var accessToken: String? = nil
+    var accessToken: String
     
-    var refreshToken: String? = nil
+    var refreshToken: String
     
-    init(accessToken: String?, refreshToken: String?) {
+    init(accessToken: String, refreshToken: String) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
     }

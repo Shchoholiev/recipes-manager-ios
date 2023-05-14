@@ -11,8 +11,10 @@ class GraphQlClient {
     
     let graphQlUrl: URL
     
-    init() {
-        graphQlUrl = URL(string: "https://sh-recipes-manager-api-dev.azurewebsites.net/graphql/")!
+    var accessToken: String? = nil
+    
+    init(_ baseUrl: String) {
+        graphQlUrl = URL(string: "\(baseUrl)graphql/")!
     }
     
     func queryAsync(_ graphQlRequest: GraphQlRequest) async -> GraphQlResponse {
@@ -29,6 +31,9 @@ class GraphQlClient {
             var request = URLRequest(url: graphQlUrl)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let jwt = accessToken {
+                request.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+            }
             request.httpBody = requestData
             
             let (data, _) = try await URLSession.shared.data(for: request)
