@@ -2,31 +2,35 @@
 //  Recipe.swift
 //  Recipes
 //
-//  Created by Serhii Shchoholiev on 12/6/22.
+//  Created by Vitalii Krasnorutskyi on 15.05.23.
 //
 
 import Foundation
 
-class Recipe: Codable {
+class Recipe : Codable {
+    var id: String
+    var name: String
+    var thumbnail: Image?
+    var ingredients: [Ingredient]?
+    var ingredientsText: String?
+    var categories: [Category]
+    var calories: Int?
+    var servingsCount: Int?
+    var isPublic: Bool
+    var createdById: String
+    var createdDateUtc: Date
     
-    let id: Int
-    
-    let name: String
-    
-    let ingredients: String?
-    
-    let text: String?
-    
-    let thumbnail: String
-    
-    let category: Category
-    
-    init(id: Int, name: String, ingredients: String, text: String, thumbnail: String, category: Category) {
+    init(id: String, name: String, thumbnail: Image?, ingredients: [Ingredient]?, ingredientsText: String?, categories: [Category], calories: Int?, servingsCount: Int?, isPublic: Bool, createdById: String, createdDateUtc: Date) {
         self.id = id
         self.name = name
-        self.ingredients = ingredients
-        self.text = text
         self.thumbnail = thumbnail
-        self.category = category
+        self.ingredients = ingredients
+        self.ingredientsText = ingredientsText
+        self.categories = categories
+        self.calories = calories
+        self.servingsCount = servingsCount
+        self.isPublic = isPublic
+        self.createdById = createdById
+        self.createdDateUtc = createdDateUtc
     }
 }
