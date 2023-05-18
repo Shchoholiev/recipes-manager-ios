@@ -29,6 +29,11 @@ class HttpClient {
         return await graphQlClient.queryAsync(graphQlRequest)
     }
     
+    func queryAsync<T: Decodable>(_ graphQlRequest: GraphQlRequest, propertyName: String) async -> GraphQlGenericResponse<T> {
+        await self.checkAccessTokenAsync()
+        return await graphQlClient.queryAsync<T>(graphQlRequest, propertyName: propertyName)
+    }
+    
     func postAsync<TIn: Encodable, TOut: Decodable>(_ data: TIn) async -> TOut? {
         await self.checkAccessTokenAsync()
         return await restClient.postAsync(data)

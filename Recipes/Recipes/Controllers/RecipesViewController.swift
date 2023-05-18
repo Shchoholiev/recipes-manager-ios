@@ -13,9 +13,13 @@ class RecipesViewController: UIViewController {
     
     @IBOutlet weak var searchField: UITextField!
     
+    @IBOutlet weak var SearchTypesBar: UISegmentedControl!
+    
     let recipesService = RecipesService()
     
     let helpersService = HelpersService()
+    
+    var recipesOld = [RecipeOld]()
     
     var recipes = [Recipe]()
     
@@ -65,7 +69,7 @@ class RecipesViewController: UIViewController {
         Task {
             let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
             if let safePage = recipesPage {
-                recipes = safePage.items
+                recipesOld = safePage.items
                 totalPages = safePage.pagesCount
                 currentPage = pageNumber
                 tableView.reloadData()
@@ -77,7 +81,7 @@ class RecipesViewController: UIViewController {
         Task {
             let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
             if let safePage = recipesPage {
-                recipes.append(contentsOf: safePage.items)
+                recipesOld.append(contentsOf: safePage.items)
                 tableView.reloadData()
             }
         }
@@ -98,6 +102,18 @@ class RecipesViewController: UIViewController {
         }
     }
     
+    @IBAction func SearchTypeChanged(_ sender: UISegmentedControl) {
+        Task {
+            let recipesPage =  await recipesService.getPageAsync(pageNumber: 1, filter: self.searchField.text!)
+            if let safePage = recipesPage {
+                recipesOld = safePage.items
+                totalPages = safePage.pagesCount
+                currentPage = 1
+                tableView.reloadData()
+            }
+        }
+    }
+    
     @IBAction func unwindToRecipes( _ seg: UIStoryboardSegue) {
         setPage(pageNumber: 1)
     }
@@ -107,12 +123,12 @@ class RecipesViewController: UIViewController {
 extension RecipesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recipes.count
+        return recipesOld.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
-        let recipe = recipes[indexPath.row]
+        let recipe = recipesOld[indexPath.row]
         cell.recipeName.text = recipe.name
         cell.recipeCategory.text = recipe.category.name
         cell.recipeWrapper.tag = recipe.id
@@ -161,7 +177,7 @@ extension RecipesViewController: UITextFieldDelegate {
 //MARK: - UITableViewDelegate
 extension RecipesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastItem = recipes.count - 1
+        let lastItem = recipesOld.count - 1
         if indexPath.row == lastItem {
             if currentPage < totalPages {
                 currentPage += 1

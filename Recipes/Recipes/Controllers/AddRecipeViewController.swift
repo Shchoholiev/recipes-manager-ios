@@ -126,7 +126,7 @@ class AddRecipeViewController: UIViewController {
                 }
             }
              
-            let recipe = Recipe(id: recipeId, name: name, ingredients: ingredients, text: text, thumbnail: thumbnail, category: Category(id: selectedCategoryId, name: ""))
+            let recipe = RecipeOld(id: recipeId, name: name, ingredients: ingredients, text: text, thumbnail: thumbnail, category: Category(id: selectedCategoryId, name: ""))
             
             var succeded = false
             if isUpdate {

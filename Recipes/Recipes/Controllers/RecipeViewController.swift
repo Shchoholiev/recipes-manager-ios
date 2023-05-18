@@ -23,7 +23,7 @@ class RecipeViewController: UIViewController {
     
     var id: Int?
     
-    var recipe: Recipe?
+    var recipe: RecipeOld?
     
     let helpersService = HelpersService()
     

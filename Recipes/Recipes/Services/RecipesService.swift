@@ -9,33 +9,58 @@ import Foundation
 
 class RecipesService: ServiceBase {
     
+    let httpClient = HttpClient()
+    
     init() {
         super.init(url: "/recipes")
     }
     
+//    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<RecipeOld>? {
+//        let url = URL(string: "\(baseUrl)/page/\(pageNumber)")
+//        if let safeUrl = url {
+//            do {
+//                let (data, _) = try await URLSession.shared.data(from: safeUrl)
+//                let recipes = try JSONDecoder().decode(PaginationWrapper<RecipeOld>.self, from: data)
+//                return recipes
+//            } catch {
+//                print(error)
+//            }
+//        }
+//        
+//        return nil
+//    }
+    
     func getPageAsync(pageNumber: Int) async -> PaginationWrapper<Recipe>? {
-        let url = URL(string: "\(baseUrl)/page/\(pageNumber)")
-        if let safeUrl = url {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                let recipes = try JSONDecoder().decode(PaginationWrapper<Recipe>.self, from: data)
-                return recipes
-            } catch {
-                print(error)
-            }
-        }
-        
-        return nil
+        let request = GraphQlRequest(
+            query: """
+           query Get($pageNumber: Int!, $pageSize: Int!) {
+             recipes(pageNumber: $pageNumber, pageSize: $pageSize) {
+               items {
+                 id
+                 name
+                 text
+               }
+             }
+           }
+        """,
+            variables: [
+                "pageNumber": pageNumber,
+                "pageSize": 20
+            ]
+                )
+        let res: GraphQlGenericResponse<PaginationWrapper<Recipe>> = await httpClient.queryAsync<PaginationWrapper<Recipe>>(request, propertyName: "recipes")
+    
+        return res.data;
     }
     
-    func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<Recipe>? {
+    func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<RecipeOld>? {
         let encodedFilter = filter.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed)
         if let safeFilter = encodedFilter {
             let url = URL(string: "\(baseUrl)/page/\(pageNumber)/\(safeFilter)")
             if let safeUrl = url {
                 do {
                     let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                    let recipes = try JSONDecoder().decode(PaginationWrapper<Recipe>.self, from: data)
+                    let recipes = try JSONDecoder().decode(PaginationWrapper<RecipeOld>.self, from: data)
                     return recipes
                 } catch {
                     print(error)
@@ -46,12 +71,12 @@ class RecipesService: ServiceBase {
         return nil
     }
     
-    func getPageAsync(pageNumber: Int, categoryId: Int) async -> PaginationWrapper<Recipe>? {
+    func getPageAsync(pageNumber: Int, categoryId: Int) async -> PaginationWrapper<RecipeOld>? {
         let url = URL(string: "\(baseUrl)/page-by-category-id/\(pageNumber)/\(categoryId)")
         if let safeUrl = url {
             do {
                 let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                let recipes = try JSONDecoder().decode(PaginationWrapper<Recipe>.self, from: data)
+                let recipes = try JSONDecoder().decode(PaginationWrapper<RecipeOld>.self, from: data)
                 return recipes
             } catch {
                 print(error)
@@ -61,12 +86,12 @@ class RecipesService: ServiceBase {
         return nil
     }
     
-    func getRecipeAsync(id: Int) async -> Recipe? {
+    func getRecipeAsync(id: Int) async -> RecipeOld? {
         let url = URL(string: "\(baseUrl)/\(id)")
         if let safeUrl = url {
             do {
                 let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                let recipe = try JSONDecoder().decode(Recipe.self, from: data)
+                let recipe = try JSONDecoder().decode(RecipeOld.self, from: data)
                 return recipe
             } catch {
                 print(error)
@@ -76,7 +101,7 @@ class RecipesService: ServiceBase {
         return nil
     }
     
-    func createRecipe(_ recipe: Recipe) async -> Bool {
+    func createRecipe(_ recipe: RecipeOld) async -> Bool {
         let url = URL(string: baseUrl)
         if let safeUrl = url {
             do {
@@ -121,7 +146,7 @@ class RecipesService: ServiceBase {
         return false
     }
     
-    func updateRecipe(_ recipe: Recipe) async -> Bool {
+    func updateRecipe(_ recipe: RecipeOld) async -> Bool {
         let url = URL(string: "\(baseUrl)/\(recipe.id)")
         if let safeUrl = url {
             do {

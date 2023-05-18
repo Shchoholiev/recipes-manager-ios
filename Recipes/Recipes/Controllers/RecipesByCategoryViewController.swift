@@ -19,7 +19,7 @@ class RecipesByCategoryViewController: UIViewController {
     
     let helpersService = HelpersService()
     
-    var recipes = [Recipe]()
+    var recipes = [RecipeOld]()
     
     var currentPage = 1
     
