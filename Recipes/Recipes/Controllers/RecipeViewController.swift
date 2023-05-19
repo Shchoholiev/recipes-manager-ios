@@ -21,7 +21,7 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var scrollView: UIScrollView!
     
-    var id: Int?
+    var id: String?
     
     var recipe: RecipeOld?
     
@@ -37,7 +37,7 @@ class RecipeViewController: UIViewController {
         
         if let safeId = id {
             Task {
-                recipe = await recipesService.getRecipeAsync(id: safeId)
+                recipe = await recipesService.getRecipeAsync(id: 1)
                 if let safeRecipe = recipe {
                     categoryName.text = safeRecipe.category.name
                     recipeName.text = safeRecipe.name

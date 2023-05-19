@@ -45,7 +45,7 @@ class JwtTokensService {
         return dateFormatter.date(from: utcDateString)!
     }
     
-    private func getTokensFromKeychain() -> TokensModel? {
+    func getTokensFromKeychain() -> TokensModel? {
         let accessTokenValue = self.getTokenFromKeychain(accessTokenIdentifier);
         let refreshTokenValue = self.getTokenFromKeychain(refreshTokenIdentifier);
         

@@ -13,7 +13,7 @@ class RecipesByCategoryViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var category: Category?
+    var category: CategoryOld?
     
     let recipesService = RecipesService()
     
@@ -74,7 +74,7 @@ class RecipesByCategoryViewController: UIViewController {
         switch segue.identifier {
         case "showRecipe":
             let view = segue.destination as! RecipeViewController
-            view.id = chosenId
+            view.id = ""
         default:
             break
         }

@@ -7,9 +7,13 @@
 
 import Foundation
 
-enum RecipesSearchTypes {
-    case Personal
-    case `Public`
-    case Subscribed
-    case Saved
+enum RecipesSearchTypes: Int {
+    case PERSONAL
+    case PUBLIC
+    case SUBSCRIBED
+    case SAVED
+    
+    var name: String {
+        return String(describing: self)
+    }
 }

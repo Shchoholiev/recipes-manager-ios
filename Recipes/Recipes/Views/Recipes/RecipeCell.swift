@@ -8,6 +8,8 @@
 import UIKit
 
 class RecipeCell: UITableViewCell {
+    
+    weak var delegate: RecipeCellDelegate?
 
     @IBOutlet weak var recipeWrapper: UIView!
     
@@ -16,6 +18,8 @@ class RecipeCell: UITableViewCell {
     @IBOutlet weak var recipeCategory: UILabel!
     
     @IBOutlet weak var thumbnail: UIImageView!
+    
+    var recipeId: String = ""
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,4 +35,23 @@ class RecipeCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    @objc func cellTapped() {
+        print("tapped")
+        delegate?.recipeCellDidTap(self)
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
+        addGestureRecognizer(tapGesture)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
+protocol RecipeCellDelegate: AnyObject {
+    func recipeCellDidTap(_ cell: RecipeCell)
 }

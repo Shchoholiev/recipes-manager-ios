@@ -19,9 +19,9 @@ class RecipeOld: Codable {
     
     let thumbnail: String
     
-    let category: Category
+    let category: CategoryOld
     
-    init(id: Int, name: String, ingredients: String, text: String, thumbnail: String, category: Category) {
+    init(id: Int, name: String, ingredients: String, text: String, thumbnail: String, category: CategoryOld) {
         self.id = id
         self.name = name
         self.ingredients = ingredients

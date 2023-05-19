@@ -9,8 +9,6 @@ import Foundation
 
 class RecipesService: ServiceBase {
     
-    let httpClient = HttpClient()
-    
     init() {
         super.init(url: "/recipes")
     }
@@ -30,27 +28,41 @@ class RecipesService: ServiceBase {
 //        return nil
 //    }
     
-    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<Recipe>? {
+    func getPageAsync(pageNumber: Int = 1, pageSize: Int = 10, searchType: RecipesSearchTypes = .PUBLIC, search: String = "", categoriesIds: [String] = [], authorId: String = "") async -> PagedList<Recipe>? {
         let request = GraphQlRequest(
             query: """
-           query Get($pageNumber: Int!, $pageSize: Int!) {
-             recipes(pageNumber: $pageNumber, pageSize: $pageSize) {
-               items {
-                 id
-                 name
-                 text
+               query RecipeSearchResult($recipeSearchType: RecipesSearchTypes!, $pageNumber: Int!, $pageSize: Int!, $categoriesIds: [String!], $searchString: String!, $authorId: String!) {
+                 searchRecipes(recipeSearchType: $recipeSearchType, pageNumber: $pageNumber, pageSize: $pageSize, categoriesIds: $categoriesIds, searchString: $searchString, authorId: $authorId) {
+                   items {
+                     id
+                     name
+                     categories {
+                       id
+                       name
+                     }
+                     createdById
+                     createdDateUtc
+                     createdBy {
+                       id
+                       name
+                     }
+                   },
+                   totalPages
+                 }
                }
-             }
-           }
-        """,
+            """,
             variables: [
                 "pageNumber": pageNumber,
-                "pageSize": 20
+                "pageSize": pageSize,
+                "recipeSearchType": searchType.name,
+                "searchString": search,
+                "categoriesIds": categoriesIds,
+                "authorId": authorId
             ]
-                )
-        let res: GraphQlGenericResponse<PaginationWrapper<Recipe>> = await httpClient.queryAsync<PaginationWrapper<Recipe>>(request, propertyName: "recipes")
+        )
+        let response: GraphQlGenericResponse<PagedList<Recipe>> = await HttpClient.shared.queryAsync(request, propertyName: "searchRecipes")
     
-        return res.data;
+        return response.data;
     }
     
     func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<RecipeOld>? {

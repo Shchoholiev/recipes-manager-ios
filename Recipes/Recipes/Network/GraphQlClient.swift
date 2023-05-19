@@ -66,6 +66,9 @@ class GraphQlClient {
             var request = URLRequest(url: graphQlUrl)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let jwt = accessToken {
+                request.setValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
+            }
             request.httpBody = requestData
             
             let (responseData, _) = try await URLSession.shared.data(for: request)
@@ -78,7 +81,11 @@ class GraphQlClient {
                     let dictionary = safeData[propertyName];
                     if let objectDictionary = dictionary {
                         let jsonData = try JSONSerialization.data(withJSONObject: objectDictionary, options: [])
-                        let object = try JSONDecoder().decode(T.self, from: jsonData)
+                        let decoder = JSONDecoder()
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                        let object = try decoder.decode(T.self, from: jsonData)
                         let response = GraphQlGenericResponse<T>(data: object, errors: errors)
                         
                         return response
@@ -86,6 +93,7 @@ class GraphQlClient {
                 }  
             }
         } catch {
+            print(error)
             errors?.append(["error": error])
         }
         

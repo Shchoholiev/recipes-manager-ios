@@ -13,12 +13,12 @@ class CategoriesService: ServiceBase {
         super.init(url: "/categories")
     }
     
-    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<Category>? {
+    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<CategoryOld>? {
         let url = URL(string: "\(baseUrl)/page/\(pageNumber)")
         if let safeUrl = url {
             do {
                 let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                let categories = try JSONDecoder().decode(PaginationWrapper<Category>.self, from: data)
+                let categories = try JSONDecoder().decode(PaginationWrapper<CategoryOld>.self, from: data)
                 return categories
             } catch {
                 print(error)
@@ -28,14 +28,14 @@ class CategoriesService: ServiceBase {
         return nil
     }
     
-    func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<Category>? {
+    func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<CategoryOld>? {
         let encodedFilter = filter.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed)
         if let safeFilter = encodedFilter {
             let url = URL(string: "\(baseUrl)/page/\(pageNumber)/\(safeFilter)")
             if let safeUrl = url {
                 do {
                     let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                    let categories = try JSONDecoder().decode(PaginationWrapper<Category>.self, from: data)
+                    let categories = try JSONDecoder().decode(PaginationWrapper<CategoryOld>.self, from: data)
                     return categories
                 } catch {
                     print(error)
@@ -46,7 +46,7 @@ class CategoriesService: ServiceBase {
         return nil
     }
     
-    func createCategory(_ category: Category) async -> Int {
+    func createCategory(_ category: CategoryOld) async -> Int {
         let url = URL(string: baseUrl)
         if let safeUrl = url {
             do {

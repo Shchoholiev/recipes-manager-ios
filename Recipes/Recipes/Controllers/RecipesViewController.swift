@@ -27,7 +27,9 @@ class RecipesViewController: UIViewController {
     
     var totalPages = 1
     
-    var chosenId: Int?
+    var chosenId: String?
+    
+    var searchType: RecipesSearchTypes = .PUBLIC
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +39,7 @@ class RecipesViewController: UIViewController {
         tableView.delegate = self
         tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
         searchField.delegate = self
+        SearchTypesBar.selectedSegmentIndex = searchType.rawValue
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -45,11 +48,16 @@ class RecipesViewController: UIViewController {
     
     func setPage(pageNumber: Int) {
         Task {
-            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber)
+            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: searchField.text ?? "")
             if let safePage = recipesPage {
                 recipes = safePage.items
                 currentPage = pageNumber
-                totalPages = safePage.pagesCount
+                totalPages = safePage.totalPages
+                tableView.reloadData()
+            } else {
+                recipes = []
+                currentPage = pageNumber
+                totalPages = 0
                 tableView.reloadData()
             }
         }
@@ -57,7 +65,7 @@ class RecipesViewController: UIViewController {
     
     func addPage(pageNumber: Int) {
         Task {
-            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber)
+            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: searchField.text ?? "")
             if let safePage = recipesPage {
                 recipes.append(contentsOf: safePage.items)
                 tableView.reloadData()
@@ -65,30 +73,30 @@ class RecipesViewController: UIViewController {
         }
     }
 
-    func search(pageNumber: Int, filter: String) {
-        Task {
-            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = recipesPage {
-                recipesOld = safePage.items
-                totalPages = safePage.pagesCount
-                currentPage = pageNumber
-                tableView.reloadData()
-            }
-        }
-    }
+//    func search(pageNumber: Int, filter: String) {
+//        Task {
+//            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = recipesPage {
+//                recipesOld = safePage.items
+//                totalPages = safePage.pagesCount
+//                currentPage = pageNumber
+//                tableView.reloadData()
+//            }
+//        }
+//    }
+//
+//    func addSearchPage(pageNumber: Int, filter: String) {
+//        Task {
+//            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = recipesPage {
+//                recipesOld.append(contentsOf: safePage.items)
+//                tableView.reloadData()
+//            }
+//        }
+//    }
     
-    func addSearchPage(pageNumber: Int, filter: String) {
-        Task {
-            let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = recipesPage {
-                recipesOld.append(contentsOf: safePage.items)
-                tableView.reloadData()
-            }
-        }
-    }
-    
-    @objc func showRecipe(sender: UIView) {
-        chosenId = sender.tag
+    @objc func showRecipe(_ id: String) {
+        chosenId = id
         self.performSegue(withIdentifier: "showRecipe", sender: nil)
     }
     
@@ -103,15 +111,12 @@ class RecipesViewController: UIViewController {
     }
     
     @IBAction func SearchTypeChanged(_ sender: UISegmentedControl) {
-        Task {
-            let recipesPage =  await recipesService.getPageAsync(pageNumber: 1, filter: self.searchField.text!)
-            if let safePage = recipesPage {
-                recipesOld = safePage.items
-                totalPages = safePage.pagesCount
-                currentPage = 1
-                tableView.reloadData()
-            }
+        let chosenIndex = sender.selectedSegmentIndex
+        print(chosenIndex)
+        if let type = RecipesSearchTypes(rawValue: chosenIndex) {
+            searchType = type
         }
+        setPage(pageNumber: 1);
     }
     
     @IBAction func unwindToRecipes( _ seg: UIStoryboardSegue) {
@@ -123,26 +128,25 @@ class RecipesViewController: UIViewController {
 extension RecipesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return recipesOld.count
+        return recipes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
-        let recipe = recipesOld[indexPath.row]
+        let recipe = recipes[indexPath.row]
         cell.recipeName.text = recipe.name
-        cell.recipeCategory.text = recipe.category.name
-        cell.recipeWrapper.tag = recipe.id
-        cell.recipeWrapper.setOnClickListener(action: showRecipe)
+        cell.recipeCategory.text = recipe.categories[0].name
+        cell.recipeId = recipe.id
         Task {
-            if !recipe.thumbnail.isEmpty {
-                let imageData = await helpersService.downloadImage(from: recipe.thumbnail)
-                if let safeData = imageData {
-                    cell.thumbnail.contentMode = .scaleAspectFill
-                    cell.thumbnail.image = UIImage(data: safeData)
-                } else {
-                    cell.thumbnail.contentMode = .center
-                    cell.thumbnail.image = UIImage(systemName: "photo")
-                }
+            if let thumbnail = recipe.thumbnail {
+//                let imageData = await helpersService.downloadImage(from: thumbnail)
+//                if let safeData = imageData {
+//                    cell.thumbnail.contentMode = .scaleAspectFill
+//                    cell.thumbnail.image = UIImage(data: safeData)
+//                } else {
+//                    cell.thumbnail.contentMode = .center
+//                    cell.thumbnail.image = UIImage(systemName: "photo")
+//                }
             } else {
                 cell.thumbnail.contentMode = .center
                 cell.thumbnail.image = UIImage(systemName: "photo")
@@ -157,14 +161,7 @@ extension RecipesViewController: UITableViewDataSource {
 extension RecipesViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let filter = searchField.text {
-            currentPage = 1
-            if filter.isEmpty {
-                setPage(pageNumber: currentPage)
-            } else {
-                search(pageNumber: currentPage, filter: filter)
-            }
-        }
+        setPage(pageNumber: 1)
         textField.endEditing(true)
         return true
     }
@@ -177,18 +174,19 @@ extension RecipesViewController: UITextFieldDelegate {
 //MARK: - UITableViewDelegate
 extension RecipesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastItem = recipesOld.count - 1
+        let lastItem = recipes.count - 1
         if indexPath.row == lastItem {
             if currentPage < totalPages {
                 currentPage += 1
-                if let filter = searchField.text {
-                    if filter.isEmpty {
-                        addPage(pageNumber: currentPage)
-                    } else {
-                        addSearchPage(pageNumber: currentPage, filter: filter)
-                    }
-                }
+                addPage(pageNumber: currentPage)
             }
         }
+    }
+}
+
+//MARK: - RecipeCellDelegate
+extension RecipesViewController: RecipeCellDelegate {
+    func recipeCellDidTap(_ cell: RecipeCell) {
+        showRecipe(cell.recipeId)
     }
 }
