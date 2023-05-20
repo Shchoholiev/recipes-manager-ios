@@ -40,6 +40,14 @@ class RecipesService: ServiceBase {
                        id
                        name
                      }
+                     thumbnail {
+                        
+                        
+                        smallPhotoGuid
+                        extension
+                        
+            
+                     }
                      createdById
                      createdDateUtc
                      createdBy {

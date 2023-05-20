@@ -139,14 +139,14 @@ extension RecipesViewController: UITableViewDataSource {
         cell.recipeId = recipe.id
         Task {
             if let thumbnail = recipe.thumbnail {
-//                let imageData = await helpersService.downloadImage(from: thumbnail)
-//                if let safeData = imageData {
-//                    cell.thumbnail.contentMode = .scaleAspectFill
-//                    cell.thumbnail.image = UIImage(data: safeData)
-//                } else {
-//                    cell.thumbnail.contentMode = .center
-//                    cell.thumbnail.image = UIImage(systemName: "photo")
-//                }
+                let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnail.smallPhotoGuid! + "." + thumbnail.extension!)
+                if let safeData = imageData {
+                    cell.thumbnail.contentMode = .scaleAspectFill
+                    cell.thumbnail.image = UIImage(data: safeData)
+                } else {
+                    cell.thumbnail.contentMode = .center
+                    cell.thumbnail.image = UIImage(systemName: "photo")
+                }
             } else {
                 cell.thumbnail.contentMode = .center
                 cell.thumbnail.image = UIImage(systemName: "photo")

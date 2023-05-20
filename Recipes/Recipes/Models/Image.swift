@@ -6,12 +6,12 @@
 //
 
 class Image : Codable {
-    var id: String
-    var originalPhotoGuid: String
-    var smallPhotoGuid: String
-    var `extension`: String
-    var md5Hash: String
-    var imageUploadState: ImageUploadStates
+    var id: String?
+    var originalPhotoGuid: String?
+    var smallPhotoGuid: String?
+    var `extension`: String?
+    var md5Hash: String?
+    var imageUploadState: ImageUploadStates?
     
     init(id: String, originalPhotoGuid: String, smallPhotoGuid: String, `extension`: String, md5Hash: String, imageUploadState: ImageUploadStates) {
         self.id = id
