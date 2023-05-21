@@ -15,13 +15,13 @@ class CategoriesViewController: UIViewController {
     
     let categoriesService = CategoriesService()
     
-    var categories = [Category]()
+    var categories = [CategoryOld]()
     
     var currentPage = 1
     
     var totalPages = 1
     
-    var chosenCategory: Category?
+    var chosenCategory: CategoryOld?
 
     override func viewDidLoad() {
         super.viewDidLoad()

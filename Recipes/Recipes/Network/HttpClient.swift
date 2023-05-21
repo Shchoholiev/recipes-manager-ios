@@ -29,6 +29,11 @@ class HttpClient {
         return await graphQlClient.queryAsync(graphQlRequest)
     }
     
+    func queryAsync<T: Decodable>(_ graphQlRequest: GraphQlRequest, propertyName: String) async -> GraphQlGenericResponse<T> {
+        await self.checkAccessTokenAsync()
+        return await graphQlClient.queryAsync(graphQlRequest, propertyName: propertyName)
+    }
+    
     func postAsync<TIn: Encodable, TOut: Decodable>(_ data: TIn) async -> TOut? {
         await self.checkAccessTokenAsync()
         return await restClient.postAsync(data)
@@ -44,6 +49,12 @@ class HttpClient {
             let tokensModel = await getTokensAsync()
             if let tokens = tokensModel {
                 jwtTokensService.storeTokensInKeychain(tokens: tokens)
+                graphQlClient.accessToken = tokens.accessToken
+                restClient.accessToken = tokens.accessToken
+            }
+        } else {
+            let tokensModel = jwtTokensService.getTokensFromKeychain()
+            if let tokens = tokensModel {
                 graphQlClient.accessToken = tokens.accessToken
                 restClient.accessToken = tokens.accessToken
             }

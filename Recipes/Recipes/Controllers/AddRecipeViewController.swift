@@ -99,7 +99,7 @@ class AddRecipeViewController: UIViewController {
         self.performSegue(withIdentifier: "showCategories", sender: nil)
     }
     
-    func chooseCategory(_ category: Category) {
+    func chooseCategory(_ category: CategoryOld) {
         selectedCategoryText.text = category.name
         selectedCategoryId = category.id
         
@@ -126,7 +126,7 @@ class AddRecipeViewController: UIViewController {
                 }
             }
              
-            let recipe = Recipe(id: recipeId, name: name, ingredients: ingredients, text: text, thumbnail: thumbnail, category: Category(id: selectedCategoryId, name: ""))
+            let recipe = RecipeOld(id: recipeId, name: name, ingredients: ingredients, text: text, thumbnail: thumbnail, category: CategoryOld(id: selectedCategoryId, name: ""))
             
             var succeded = false
             if isUpdate {
@@ -200,7 +200,7 @@ class AddRecipeViewController: UIViewController {
         
         if let categoryName = newCategoryName.text, !categoryName.isEmpty {
             Task {
-                let newId = await categoriesService.createCategory(Category(id: 0, name: categoryName))
+                let newId = await categoriesService.createCategory(CategoryOld(id: 0, name: categoryName))
                 if newId > 0 {
                     selectedCategoryText.text = newCategoryName.text
                     selectedCategoryId = newId

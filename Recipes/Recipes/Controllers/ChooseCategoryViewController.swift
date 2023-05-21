@@ -15,7 +15,7 @@ class ChooseCategoryViewController: UIViewController {
     
     let categoriesService = CategoriesService()
     
-    var categories = [Category]()
+    var categories = [CategoryOld]()
     
     var currentPage = 1
     
@@ -77,7 +77,7 @@ class ChooseCategoryViewController: UIViewController {
         }
     }
     
-    var chooseCategoryCallback: ((_ category: Category) -> Void)? = nil
+    var chooseCategoryCallback: ((_ category: CategoryOld) -> Void)? = nil
     
     @objc func chooseCategory(sender: UIView) {
         let chosenCategory = categories.first(where: { $0.id == sender.tag } )

@@ -12,48 +12,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let healthService = HealthService()
     
-    let httpClient = HttpClient()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Task {
             await healthService.check()
-            // remove - it's just an test/example
-            let request = GraphQlRequest(
-                query: """
-                   query RecipeSearchResult($recipeSearchType: RecipesSearchTypes!, $pageNumber: Int!, $pageSize: Int!, $categoriesIds: [String!], $searchString: String!, $authorId: String!) {
-                     searchRecipes(recipeSearchType: $recipeSearchType, pageNumber: $pageNumber, pageSize: $pageSize, categoriesIds: $categoriesIds, searchString: $searchString, authorId: $authorId) {
-                       items {
-                         name
-                         createdById
-                         categories {
-                           id
-                         }
-                         ingredientsText
-                         ingredients {
-                           name
-                           units
-                         }
-                         createdBy {
-                           name
-                           id
-                         }
-                       },
-                       totalItems
-                     }
-                   }
-                """,
-                variables: [
-                    "recipeSearchType": "PUBLIC",
-                    "pageNumber": 1,
-                    "pageSize": 10,
-                    "categoriesIds": [],
-                    "searchString": "",
-                    "authorId": ""
-                ]
-            )
-            let res = await httpClient.queryAsync(request)
-            print(res)
         }
         
         return true
