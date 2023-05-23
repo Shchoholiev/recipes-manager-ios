@@ -121,6 +121,40 @@ class RecipesService: ServiceBase {
         return nil
     }
     
+    func getRecipeAsync(id: String) async -> Recipe? {
+        let request = GraphQlRequest(
+            query: """
+               query Query($recipeId: String!) {
+                 recipe(id: $recipeId) {
+                   name
+                   minutesToCook
+                   isSaved
+                   ingredientsText
+                   ingredients {
+                     name
+                   }
+                   createdById
+                   categories {
+                     name
+                   }
+                   text
+                   thumbnail {
+                     originalPhotoGuid
+                     extension
+                   }
+                   calories
+                 }
+               }
+            """,
+            variables: [
+                "recipeId": id
+            ]
+        )
+        let response: GraphQlGenericResponse<Recipe> = await HttpClient.shared.queryAsync(request, propertyName: "recipe")
+    
+        return response.data;
+    }
+    
     func createRecipe(_ recipe: RecipeOld) async -> Bool {
         let url = URL(string: baseUrl)
         if let safeUrl = url {

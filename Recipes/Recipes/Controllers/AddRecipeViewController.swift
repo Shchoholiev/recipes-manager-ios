@@ -233,7 +233,7 @@ class AddRecipeViewController: UIViewController {
             let view = segue.destination as! RecipeViewController
             Task {
                 if let recipe = await recipesService.getRecipeAsync(id: recipeId) {
-                    view.recipe = recipe
+                    view.recipeOld = recipe
                     view.viewDidLoad()
                 }
             }
