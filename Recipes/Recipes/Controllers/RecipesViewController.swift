@@ -97,6 +97,7 @@ class RecipesViewController: UIViewController {
     
     @objc func showRecipe(_ id: String) {
         chosenId = id
+        print("Tapped")
         self.performSegue(withIdentifier: "showRecipe", sender: nil)
     }
     
@@ -133,6 +134,7 @@ extension RecipesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
+        cell.delegate = self
         let recipe = recipes[indexPath.row]
         cell.recipeName.text = recipe.name
         cell.recipeCategory.text = recipe.categories[0].name
@@ -187,6 +189,7 @@ extension RecipesViewController: UITableViewDelegate {
 //MARK: - RecipeCellDelegate
 extension RecipesViewController: RecipeCellDelegate {
     func recipeCellDidTap(_ cell: RecipeCell) {
+        print(cell.recipeId)
         showRecipe(cell.recipeId)
     }
 }

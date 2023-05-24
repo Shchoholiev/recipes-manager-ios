@@ -130,11 +130,9 @@ class RecipesService: ServiceBase {
                    minutesToCook
                    isSaved
                    ingredientsText
-                   ingredients {
-                     name
-                   }
                    createdById
                    categories {
+                     id
                      name
                    }
                    text
@@ -143,6 +141,7 @@ class RecipesService: ServiceBase {
                      extension
                    }
                    calories
+                   id
                  }
                }
             """,
@@ -151,7 +150,7 @@ class RecipesService: ServiceBase {
             ]
         )
         let response: GraphQlGenericResponse<Recipe> = await HttpClient.shared.queryAsync(request, propertyName: "recipe")
-    
+        print(response.data)
         return response.data;
     }
     

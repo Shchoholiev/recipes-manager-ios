@@ -13,14 +13,15 @@ class Recipe : Codable {
     var thumbnail: Image?
     var ingredients: [Ingredient]?
     var ingredientsText: String?
+    var text: String?
     var categories: [Category]
     var calories: Int?
     var servingsCount: Int?
     var isPublic: Bool?
     var createdById: String
-    var createdDateUtc: Date
+    var createdDateUtc: Date?
     
-    init(id: String, name: String, thumbnail: Image?, ingredients: [Ingredient]?, ingredientsText: String?, categories: [Category], calories: Int?, servingsCount: Int?, isPublic: Bool?, createdById: String, createdDateUtc: Date) {
+    init(id: String, name: String, thumbnail: Image?, ingredients: [Ingredient]?, ingredientsText: String?, categories: [Category], calories: Int?, servingsCount: Int?, isPublic: Bool?, createdById: String, createdDateUtc: Date?, text: String?) {
         self.id = id
         self.name = name
         self.thumbnail = thumbnail
@@ -32,5 +33,6 @@ class Recipe : Codable {
         self.isPublic = isPublic
         self.createdById = createdById
         self.createdDateUtc = createdDateUtc
+        self.text = text
     }
 }

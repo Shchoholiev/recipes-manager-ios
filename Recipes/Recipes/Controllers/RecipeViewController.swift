@@ -15,7 +15,9 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var recipeName: UILabel!
     
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var contentTypeBar: UISegmentedControl!
+    
+    @IBOutlet weak var contentLabel: UILabel!
     
     var id: String?
     
@@ -27,7 +29,7 @@ class RecipeViewController: UIViewController {
     
     let recipesService = RecipesService()
     
-    @IBOutlet weak var containerHeight: NSLayoutConstraint!
+//    @IBOutlet weak var containerHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,13 +37,21 @@ class RecipeViewController: UIViewController {
         
         if let safeId = id {
             Task {
-                recipe = await recipesService.getRecipeAsync(id: self.id!)
+                print("drin")
+                recipe = await recipesService.getRecipeAsync(id: safeId)
                 if let safeRecipe = recipe {
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
-//                    ingredients.text = safeRecipe.ingredients
-//                    recipeText.text = safeRecipe.text
-                    let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + recipe.thumbnail?.originalPhotoGuid! + "." + recipe.thumbnail?.extension!)
+                    switch contentTypeBar.selectedSegmentIndex{
+                    case 0:
+                        contentLabel.text = safeRecipe.ingredientsText
+                    case 1:
+                        contentLabel.text = safeRecipe.text
+                    default:
+                        break
+                    }
+                    
+                    let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + (safeRecipe.thumbnail?.originalPhotoGuid)! + "." + (safeRecipe.thumbnail?.extension)!)
                     if let safeData = imageData {
                         thumbnail.image = UIImage(data: safeData)
                         thumbnail.contentMode = .scaleAspectFill
@@ -62,11 +72,11 @@ class RecipeViewController: UIViewController {
     }
     
     
-    @IBAction func editRecipe(_ sender: UIButton) {
-        Task {
-            self.performSegue(withIdentifier: "showAddRecipe", sender: self)
-        }
-    }
+//    @IBAction func editRecipe(_ sender: UIButton) {
+//        Task {
+//            self.performSegue(withIdentifier: "showAddRecipe", sender: self)
+//        }
+//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
@@ -94,17 +104,17 @@ class RecipeViewController: UIViewController {
         }
     }
     
-    @IBAction func deleteRecipe(_ sender: UIButton) {
-        Task {
-            if let id = recipeOld?.id {
-                let result = await recipesService.deleteAsync(id: id)
-                if result {
-                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
-                }
-            }
-        }
-    }
+//    @IBAction func deleteRecipe(_ sender: UIButton) {
+//        Task {
+//            if let id = recipeOld?.id {
+//                let result = await recipesService.deleteAsync(id: id)
+//                if result {
+//                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
+//                }
+//            }
+//        }
+//    }
     
-    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
-    }
+//    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
+//    }
 }
