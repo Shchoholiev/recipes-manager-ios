@@ -37,19 +37,11 @@ class RecipeViewController: UIViewController {
         
         if let safeId = id {
             Task {
-                print("drin")
                 recipe = await recipesService.getRecipeAsync(id: safeId)
                 if let safeRecipe = recipe {
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
-                    switch contentTypeBar.selectedSegmentIndex{
-                    case 0:
-                        contentLabel.text = safeRecipe.ingredientsText
-                    case 1:
-                        contentLabel.text = safeRecipe.text
-                    default:
-                        break
-                    }
+                    contentLabel.text = safeRecipe.ingredientsText
                     
                     let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + (safeRecipe.thumbnail?.originalPhotoGuid)! + "." + (safeRecipe.thumbnail?.extension)!)
                     if let safeData = imageData {
@@ -60,6 +52,9 @@ class RecipeViewController: UIViewController {
             }
         }
     }
+    
+    
+
     
     override func viewDidDisappear(_ animated: Bool) {
         UIApplication.shared.isIdleTimerDisabled = false
@@ -99,6 +94,16 @@ class RecipeViewController: UIViewController {
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
             view.setPage(pageNumber: 1)
+        default:
+            break
+        }
+    }
+    @IBAction func contentBarChanged(_ sender: Any) {
+        switch contentTypeBar.selectedSegmentIndex{
+        case 0:
+            contentLabel.text = recipe?.ingredientsText!
+        case 1:
+            contentLabel.text = recipe?.text!
         default:
             break
         }
