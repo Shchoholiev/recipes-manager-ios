@@ -130,6 +130,11 @@ class RecipesService: ServiceBase {
                    minutesToCook
                    isSaved
                    ingredientsText
+                   ingredients {
+                     name
+                     units
+                     amount
+                   }
                    createdById
                    categories {
                      id

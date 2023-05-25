@@ -248,9 +248,19 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HRv-1z-SrS">
                                         <rect key="frame" x="0.0" y="215" width="428" height="701"/>
                                         <subviews>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="v6E-p5-eGO">
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="v6E-p5-eGO">
                                                 <rect key="frame" x="20" y="120" width="388" height="581"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <prototypes>
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="IngredientCell" id="D4u-SM-f7v" customClass="IngredientCell" customModule="Recipes" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="50" width="388" height="44"/>
+                                                        <autoresizingMask key="autoresizingMask"/>
+                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D4u-SM-f7v" id="jJz-JS-LUD">
+                                                            <rect key="frame" x="0.0" y="0.0" width="388" height="44"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
+                                                        </tableViewCellContentView>
+                                                    </tableViewCell>
+                                                </prototypes>
                                             </tableView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="3iF-wq-75E">
                                                 <rect key="frame" x="20" y="0.0" width="388" height="105"/>
@@ -303,7 +313,7 @@
                                                     <constraint firstItem="CHa-uD-Fu7" firstAttribute="top" secondItem="3iF-wq-75E" secondAttribute="top" id="gaA-DL-8sm"/>
                                                 </constraints>
                                             </stackView>
-                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" canCancelContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ncE-KM-zqo">
+                                            <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" canCancelContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ncE-KM-zqo">
                                                 <rect key="frame" x="20" y="120" width="388" height="725.33333333333337"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z4H-QU-2Mq">
@@ -338,6 +348,11 @@
                                             <constraint firstItem="v6E-p5-eGO" firstAttribute="top" secondItem="3iF-wq-75E" secondAttribute="bottom" constant="15" id="pcY-So-4BG"/>
                                             <constraint firstItem="v6E-p5-eGO" firstAttribute="leading" secondItem="HRv-1z-SrS" secondAttribute="leading" constant="20" id="xiT-ny-lhM"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="ncE-KM-zqo"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                 </subviews>
                                 <viewLayoutGuide key="safeArea" id="sog-GT-EB7"/>

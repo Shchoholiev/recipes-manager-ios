@@ -27,6 +27,8 @@ class RecipeViewController: UIViewController {
     
     var id: String?
     
+    var ingredients = [Ingredient]()
+    
     var recipeOld: RecipeOld?
     
     var recipe: Recipe?
@@ -41,21 +43,30 @@ class RecipeViewController: UIViewController {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
         
-        tableView.isHidden = true
-        scrollView.isHidden = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UINib(nibName: "IngredientCell", bundle: nil), forCellReuseIdentifier: "IngredientCell")
+        
+//        tableView.isHidden = false
+//        scrollView.isHidden = true
         
         if let safeId = id {
             Task {
                 recipe = await recipesService.getRecipeAsync(id: safeId)
                 if let safeRecipe = recipe {
+                    if let safeIngredients = safeRecipe.ingredients{
+                        ingredients = safeIngredients
+                        tableView.reloadData()
+                    }else{
+                        
+                    }
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
                     contentLabel.text = safeRecipe.ingredientsText
-                    if(safeRecipe.ingredients != nil){
-                        tableView.isHidden = false
-                        scrollView.isHidden = true
-                        
-                    }
+//                    if(safeRecipe.ingredients?.isEmpty == false){
+//                        tableView.isHidden = false
+//                        scrollView.isHidden = true
+//                    }
                     if safeRecipe.isSaved! == true{
                         savedButton.alpha = 0.6
                     }
@@ -78,9 +89,9 @@ class RecipeViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-             let scrollHeight = contentLabel.frame.origin.y + contentLabel.frame.size.height + 100
-                scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, scrollHeight)
-                containerHeight.constant = scrollHeight
+        let scrollHeight = contentLabel.frame.origin.y + contentLabel.frame.size.height + 100
+        scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, scrollHeight)
+        containerHeight.constant = scrollHeight
     }
     
     
@@ -141,19 +152,56 @@ class RecipeViewController: UIViewController {
             savedButton.alpha = 1
         }
     }
-        
-        //    @IBAction func deleteRecipe(_ sender: UIButton) {
-        //        Task {
-        //            if let id = recipeOld?.id {
-        //                let result = await recipesService.deleteAsync(id: id)
-        //                if result {
-        //                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
-        //                }
-        //            }
-        //        }
-        //    }
-        
-        //    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
-        //    }
     
+    //    @IBAction func deleteRecipe(_ sender: UIButton) {
+    //        Task {
+    //            if let id = recipeOld?.id {
+    //                let result = await recipesService.deleteAsync(id: id)
+    //                if result {
+    //                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
+    //                }
+    //            }
+    //        }
+    //    }
+    
+    //    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
+    //    }
 }
+    //MARK: - UITableViewDataSource
+extension RecipeViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(ingredients.count)
+        
+        return ingredients.count
+    }
+        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientCell", for: indexPath) as! IngredientCell
+        
+        print("cell")
+        
+        let entity = ingredients[indexPath.row]
+        cell.ingredientName?.text = entity.name
+        cell.ingredientAmount?.text = String(entity.amount) + " " + entity.units!
+        return cell
+    }
+//    func tableView(_ tableView: UITableView,
+//               heightForRowAt indexPath: IndexPath) -> CGFloat {
+//       // Make the first row larger to accommodate a custom cell.
+//      if indexPath.row == 0 {
+//          return 80
+//       }
+//
+//       // Use the default size for all other rows.
+//       return UITableView.automaticDimension
+//    }
+}
+
+//MARK: - UITableViewDelegate
+extension RecipeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+       
+        }
+    }
+
