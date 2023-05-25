@@ -99,8 +99,8 @@
 		90C6E7852984B8FE000F5B5E /* CategoryChooseCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryChooseCell.xib; sourceTree = "<group>"; };
 		90C6E7872984B90D000F5B5E /* CategoryChooseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryChooseCell.swift; sourceTree = "<group>"; };
 		FE53DE7F2A1F996A00E2195A /* CreateSavedRecipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSavedRecipe.swift; sourceTree = "<group>"; };
-		FE53DE862A200D1C00E2195A /* IngredientCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = IngredientCell.xib; path = Recipes/Views/IngredientCell.xib; sourceTree = SOURCE_ROOT; };
-		FE53DE882A200D3400E2195A /* IngredientCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IngredientCell.swift; path = Recipes/Views/IngredientCell.swift; sourceTree = SOURCE_ROOT; };
+		FE53DE862A200D1C00E2195A /* IngredientCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = IngredientCell.xib; path = Recipes/Views/Ingredients/IngredientCell.xib; sourceTree = SOURCE_ROOT; };
+		FE53DE882A200D3400E2195A /* IngredientCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IngredientCell.swift; path = Recipes/Views/Ingredients/IngredientCell.swift; sourceTree = SOURCE_ROOT; };
 		FE5FD1AA2A122AD5005E172E /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		FE5FD1AC2A122C18005E172E /* ImageUploadStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadStates.swift; sourceTree = "<group>"; };
 		FE5FD1AE2A122C7C005E172E /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 		90A259B6293FF9650017E68B /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FE53DE812A200B6400E2195A /* Ingredients */,
+				FE53DE8C2A20200500E2195A /* Ingredients */,
 				90A259DA29468A800017E68B /* Extensions */,
 				90A259D329466EE80017E68B /* Recipes */,
 				90A259C8294038410017E68B /* Categories */,
@@ -255,7 +255,7 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		FE53DE812A200B6400E2195A /* Ingredients */ = {
+		FE53DE8C2A20200500E2195A /* Ingredients */ = {
 			isa = PBXGroup;
 			children = (
 				FE53DE862A200D1C00E2195A /* IngredientCell.xib */,

@@ -248,19 +248,9 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HRv-1z-SrS">
                                         <rect key="frame" x="0.0" y="215" width="428" height="701"/>
                                         <subviews>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="v6E-p5-eGO">
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="7Ee-4X-WVw">
                                                 <rect key="frame" x="20" y="120" width="388" height="581"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <prototypes>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="IngredientCell" id="D4u-SM-f7v" customClass="IngredientCell" customModule="Recipes" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="50" width="388" height="44"/>
-                                                        <autoresizingMask key="autoresizingMask"/>
-                                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D4u-SM-f7v" id="jJz-JS-LUD">
-                                                            <rect key="frame" x="0.0" y="0.0" width="388" height="44"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                        </tableViewCellContentView>
-                                                    </tableViewCell>
-                                                </prototypes>
                                             </tableView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="3iF-wq-75E">
                                                 <rect key="frame" x="20" y="0.0" width="388" height="105"/>
@@ -338,15 +328,15 @@
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="ncE-KM-zqo" secondAttribute="trailing" constant="20" id="2Gk-FI-fdI"/>
-                                            <constraint firstAttribute="trailing" secondItem="v6E-p5-eGO" secondAttribute="trailing" constant="20" id="4x3-y9-siP"/>
                                             <constraint firstItem="3iF-wq-75E" firstAttribute="leading" secondItem="HRv-1z-SrS" secondAttribute="leading" constant="20" id="9i5-wr-83W"/>
+                                            <constraint firstAttribute="bottom" secondItem="7Ee-4X-WVw" secondAttribute="bottom" id="DHd-Ss-FLl"/>
                                             <constraint firstItem="ncE-KM-zqo" firstAttribute="top" secondItem="3iF-wq-75E" secondAttribute="bottom" constant="15" id="Dqc-kG-99k"/>
+                                            <constraint firstItem="7Ee-4X-WVw" firstAttribute="leading" secondItem="HRv-1z-SrS" secondAttribute="leading" constant="20" id="Lv7-rZ-Sqc"/>
+                                            <constraint firstAttribute="trailing" secondItem="7Ee-4X-WVw" secondAttribute="trailing" constant="20" id="TPY-sq-BCB"/>
                                             <constraint firstAttribute="trailing" secondItem="3iF-wq-75E" secondAttribute="trailing" constant="20" id="bVD-SE-m3d"/>
-                                            <constraint firstAttribute="bottom" secondItem="v6E-p5-eGO" secondAttribute="bottom" id="dhx-Zp-Vna"/>
                                             <constraint firstItem="3iF-wq-75E" firstAttribute="top" secondItem="HRv-1z-SrS" secondAttribute="top" id="jyQ-bD-b2F"/>
                                             <constraint firstItem="ncE-KM-zqo" firstAttribute="leading" secondItem="HRv-1z-SrS" secondAttribute="leading" constant="20" id="l9l-VM-Z5b"/>
-                                            <constraint firstItem="v6E-p5-eGO" firstAttribute="top" secondItem="3iF-wq-75E" secondAttribute="bottom" constant="15" id="pcY-So-4BG"/>
-                                            <constraint firstItem="v6E-p5-eGO" firstAttribute="leading" secondItem="HRv-1z-SrS" secondAttribute="leading" constant="20" id="xiT-ny-lhM"/>
+                                            <constraint firstItem="7Ee-4X-WVw" firstAttribute="top" secondItem="3iF-wq-75E" secondAttribute="bottom" constant="15" id="nbm-gJ-yHf"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="subviews">
@@ -385,7 +375,7 @@
                         <outlet property="recipeName" destination="E8l-ai-Gkn" id="g8s-en-reW"/>
                         <outlet property="savedButton" destination="OZD-95-Rwp" id="lRe-ME-dnH"/>
                         <outlet property="scrollView" destination="ncE-KM-zqo" id="mUr-io-HES"/>
-                        <outlet property="tableView" destination="v6E-p5-eGO" id="lXU-0F-GUl"/>
+                        <outlet property="tableView" destination="7Ee-4X-WVw" id="VMS-c7-pGV"/>
                         <outlet property="thumbnail" destination="ras-pa-rEN" id="vUR-BF-gmW"/>
                         <segue destination="LD5-zG-Q31" kind="unwind" identifier="unwindToRecipes" unwindAction="unwindToRecipes:" id="El7-Xy-A18"/>
                         <segue destination="dHd-Xc-QoH" kind="show" identifier="showAddRecipe" id="HdQ-vE-8xd"/>

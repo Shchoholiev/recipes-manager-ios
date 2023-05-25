@@ -44,7 +44,6 @@ class RecipeViewController: UIViewController {
         UIApplication.shared.isIdleTimerDisabled = true
         
         tableView.dataSource = self
-        tableView.delegate = self
         tableView.register(UINib(nibName: "IngredientCell", bundle: nil), forCellReuseIdentifier: "IngredientCell")
         
 //        tableView.isHidden = false
