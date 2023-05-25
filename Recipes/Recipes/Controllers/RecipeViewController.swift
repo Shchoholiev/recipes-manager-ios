@@ -19,6 +19,12 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var contentLabel: UILabel!
     
+    @IBOutlet weak var savedButton: UIButton!
+    
+    @IBOutlet weak var scrollView: UIScrollView!
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     var id: String?
     
     var recipeOld: RecipeOld?
@@ -29,11 +35,14 @@ class RecipeViewController: UIViewController {
     
     let recipesService = RecipesService()
     
-//    @IBOutlet weak var containerHeight: NSLayoutConstraint!
+    @IBOutlet weak var containerHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        tableView.isHidden = true
+        scrollView.isHidden = false
         
         if let safeId = id {
             Task {
@@ -42,6 +51,14 @@ class RecipeViewController: UIViewController {
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
                     contentLabel.text = safeRecipe.ingredientsText
+                    if(safeRecipe.ingredients != nil){
+                        tableView.isHidden = false
+                        scrollView.isHidden = true
+                        
+                    }
+                    if safeRecipe.isSaved! == true{
+                        savedButton.alpha = 0.6
+                    }
                     
                     let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + (safeRecipe.thumbnail?.originalPhotoGuid)! + "." + (safeRecipe.thumbnail?.extension)!)
                     if let safeData = imageData {
@@ -54,24 +71,24 @@ class RecipeViewController: UIViewController {
     }
     
     
-
+    
     
     override func viewDidDisappear(_ animated: Bool) {
         UIApplication.shared.isIdleTimerDisabled = false
     }
     
     override func viewDidLayoutSubviews() {
-//     let scrollHeight = recipeText.frame.origin.y + recipeText.frame.size.height + 100
-//        scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, scrollHeight)
-//        containerHeight.constant = scrollHeight
+             let scrollHeight = contentLabel.frame.origin.y + contentLabel.frame.size.height + 100
+                scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, scrollHeight)
+                containerHeight.constant = scrollHeight
     }
     
     
-//    @IBAction func editRecipe(_ sender: UIButton) {
-//        Task {
-//            self.performSegue(withIdentifier: "showAddRecipe", sender: self)
-//        }
-//    }
+    //    @IBAction func editRecipe(_ sender: UIButton) {
+    //        Task {
+    //            self.performSegue(withIdentifier: "showAddRecipe", sender: self)
+    //        }
+    //    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
@@ -109,17 +126,34 @@ class RecipeViewController: UIViewController {
         }
     }
     
-//    @IBAction func deleteRecipe(_ sender: UIButton) {
-//        Task {
-//            if let id = recipeOld?.id {
-//                let result = await recipesService.deleteAsync(id: id)
-//                if result {
-//                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
-//                }
-//            }
-//        }
-//    }
+    @IBAction func saveButtonPushed(_ sender: Any) {
+        Task{
+            if let id = recipe?.id {
+                let result = await recipesService.saveRecipe(id: id)
+                if result {
+                    recipe?.isSaved = true
+                    savedButton.alpha = 0.6
+                }
+            }
+        }
+        if recipe?.isSaved == true{
+            recipe?.isSaved = false
+            savedButton.alpha = 1
+        }
+    }
+        
+        //    @IBAction func deleteRecipe(_ sender: UIButton) {
+        //        Task {
+        //            if let id = recipeOld?.id {
+        //                let result = await recipesService.deleteAsync(id: id)
+        //                if result {
+        //                    self.performSegue(withIdentifier: "unwindToRecipes", sender: self)
+        //                }
+        //            }
+        //        }
+        //    }
+        
+        //    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
+        //    }
     
-//    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
-//    }
 }

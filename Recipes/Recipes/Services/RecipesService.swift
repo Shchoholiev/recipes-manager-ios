@@ -154,6 +154,47 @@ class RecipesService: ServiceBase {
         return response.data;
     }
     
+    func saveRecipe(id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+               mutation Mutation($dto: SavedRecipeCreateDtoInput!) {
+                 addSavedRecipe(dto: $dto) {
+                   recipeId
+                 }
+               }
+            """,
+            variables: [
+                "dto": ["recipeId" : id]
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        if response.errors == nil{
+            return true
+        }
+        return false
+    }
+    
+    func deleteSaved(id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+               mutation Mutation($dto: SavedRecipeCreateDtoInput!) {
+                 addSavedRecipe(dto: $dto) {
+                   recipeId
+                 }
+               }
+            """,
+            variables: [
+                "dto": ["recipeId" : id]
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        if response.errors == nil{
+            return true
+        }
+        return false
+    }
+    
+    
     func createRecipe(_ recipe: RecipeOld) async -> Bool {
         let url = URL(string: baseUrl)
         if let safeUrl = url {
