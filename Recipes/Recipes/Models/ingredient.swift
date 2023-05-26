@@ -8,11 +8,13 @@
 import Foundation
 
 class Ingredient : Codable {
-    var id: String
     var name: String
+    var units: String?
+    var amount: Double
     
-    init(id: String, name: String) {
-        self.id = id
+    init(name: String, units: String?, amount: Double) {
         self.name = name
+        self.amount = amount
+        self.units = units
     }
 }

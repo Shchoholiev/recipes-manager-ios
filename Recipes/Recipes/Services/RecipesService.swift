@@ -121,6 +121,82 @@ class RecipesService: ServiceBase {
         return nil
     }
     
+    func getRecipeAsync(id: String) async -> Recipe? {
+        let request = GraphQlRequest(
+            query: """
+               query Query($recipeId: String!) {
+                 recipe(id: $recipeId) {
+                   name
+                   minutesToCook
+                   servingsCount
+                   isSaved
+                   ingredientsText
+                   ingredients {
+                     name
+                     units
+                     amount
+                   }
+                   createdById
+                   categories {
+                     id
+                     name
+                   }
+                   text
+                   thumbnail {
+                     originalPhotoGuid
+                     extension
+                   }
+                   calories
+                   id
+                 }
+               }
+            """,
+            variables: [
+                "recipeId": id
+            ]
+        )
+        let response: GraphQlGenericResponse<Recipe> = await HttpClient.shared.queryAsync(request, propertyName: "recipe")
+        
+        return response.data;
+    }
+    
+    func saveRecipe(id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+               mutation Mutation($dto: SavedRecipeCreateDtoInput!) {
+                 addSavedRecipe(dto: $dto) {
+                   recipeId
+                 }
+               }
+            """,
+            variables: [
+                "dto": ["recipeId" : id]
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        
+        return response.errors == nil
+    }
+    
+    func deleteSaved(id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+               mutation DeleteSavedRecipe($recipeId: String!) {
+                 deleteSavedRecipe(recipeId: $recipeId) {
+                   isSuccessful
+                 }
+               }
+            """,
+            variables: [
+                "recipeId": id
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        
+        return response.errors == nil
+    }
+    
+    
     func createRecipe(_ recipe: RecipeOld) async -> Bool {
         let url = URL(string: baseUrl)
         if let safeUrl = url {

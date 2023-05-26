@@ -112,7 +112,6 @@ class RecipesViewController: UIViewController {
     
     @IBAction func SearchTypeChanged(_ sender: UISegmentedControl) {
         let chosenIndex = sender.selectedSegmentIndex
-        print(chosenIndex)
         if let type = RecipesSearchTypes(rawValue: chosenIndex) {
             searchType = type
         }
@@ -133,6 +132,7 @@ extension RecipesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeCell", for: indexPath) as! RecipeCell
+        cell.delegate = self
         let recipe = recipes[indexPath.row]
         cell.recipeName.text = recipe.name
         cell.recipeCategory.text = recipe.categories[0].name

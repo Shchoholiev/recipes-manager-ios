@@ -27,6 +27,8 @@ class RecipeCell: UITableViewCell {
         recipeWrapper.layer.borderWidth = 1
         recipeWrapper.layer.borderColor = CGColor(gray: 0.8, alpha: 1)
         recipeWrapper.clipsToBounds = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
+        addGestureRecognizer(tapGesture)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -36,15 +38,7 @@ class RecipeCell: UITableViewCell {
     }
     
     @objc func cellTapped() {
-        print("tapped")
         delegate?.recipeCellDidTap(self)
-    }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-    
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
-        addGestureRecognizer(tapGesture)
     }
     
     required init?(coder aDecoder: NSCoder) {
