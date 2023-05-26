@@ -97,7 +97,6 @@ class RecipesViewController: UIViewController {
     
     @objc func showRecipe(_ id: String) {
         chosenId = id
-        print("Tapped")
         self.performSegue(withIdentifier: "showRecipe", sender: nil)
     }
     
@@ -113,7 +112,6 @@ class RecipesViewController: UIViewController {
     
     @IBAction func SearchTypeChanged(_ sender: UISegmentedControl) {
         let chosenIndex = sender.selectedSegmentIndex
-        print(chosenIndex)
         if let type = RecipesSearchTypes(rawValue: chosenIndex) {
             searchType = type
         }
@@ -189,7 +187,6 @@ extension RecipesViewController: UITableViewDelegate {
 //MARK: - RecipeCellDelegate
 extension RecipesViewController: RecipeCellDelegate {
     func recipeCellDidTap(_ cell: RecipeCell) {
-        print(cell.recipeId)
         showRecipe(cell.recipeId)
     }
 }

@@ -38,7 +38,6 @@ class RecipeCell: UITableViewCell {
     }
     
     @objc func cellTapped() {
-        print("tapped")
         delegate?.recipeCellDidTap(self)
     }
     

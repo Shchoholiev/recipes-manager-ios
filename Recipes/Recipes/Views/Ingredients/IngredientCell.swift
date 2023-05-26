@@ -19,14 +19,9 @@ class IngredientCell: UITableViewCell {
         super.awakeFromNib()
         ingredientWrapper.layer.cornerRadius = 10
         ingredientWrapper.layer.borderWidth = 1
-        ingredientWrapper.layer.borderColor = CGColor(gray: 0.8, alpha: 1)
+        ingredientWrapper.layer.backgroundColor = CGColor(gray: 0.15, alpha: 1)
+        ingredientWrapper.layer.borderColor = CGColor(gray: 0.15, alpha: 1)
         ingredientWrapper.clipsToBounds = true
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }
 
