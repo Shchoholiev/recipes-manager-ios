@@ -19,6 +19,8 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var contentLabel: UILabel!
     
+    @IBOutlet weak var infoLabel: UILabel!
+    
     @IBOutlet weak var savedButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
@@ -69,6 +71,8 @@ class RecipeViewController: UIViewController {
                     
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
+                    infoLabel.text = String(safeRecipe.calories!) + " ccal. " + String(safeRecipe.minutesToCook!) + " min. "
+                    + String(safeRecipe.servingsCount!) + " Servings"
                     contentLabel.text = safeRecipe.ingredientsText
                     if safeRecipe.isSaved == true{
                         savedButton.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)

@@ -128,6 +128,7 @@ class RecipesService: ServiceBase {
                  recipe(id: $recipeId) {
                    name
                    minutesToCook
+                   servingsCount
                    isSaved
                    ingredientsText
                    ingredients {
