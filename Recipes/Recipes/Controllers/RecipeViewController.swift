@@ -71,8 +71,8 @@ class RecipeViewController: UIViewController {
                     
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
-                    infoLabel.text = String(safeRecipe.calories!) + " ccal. " + String(safeRecipe.minutesToCook!) + " min. "
-                    + String(safeRecipe.servingsCount!) + " Servings"
+                    infoLabel.text = String(safeRecipe.calories ?? 0) + " ccal | " + String(safeRecipe.minutesToCook ?? 0) + " min | "
+                    + String(safeRecipe.servingsCount ?? 0) + " Servings"
                     contentLabel.text = safeRecipe.ingredientsText
                     if safeRecipe.isSaved == true{
                         savedButton.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)
@@ -143,10 +143,8 @@ class RecipeViewController: UIViewController {
     }
     
     @IBAction func saveButtonPushed(_ sender: UIButton) {
-        //savedButton.isEnabled = false
         Task{
             if let id = recipe?.id {
-                print(id)
                 if !(recipe?.isSaved!)!{
                     sender.isEnabled = false
                     let result = await recipesService.saveRecipe(id: id)
@@ -181,7 +179,13 @@ extension RecipeViewController: UITableViewDataSource {
         
         let entity = ingredients[indexPath.row]
         cell.ingredientName?.text = entity.name
-        cell.ingredientAmount?.text = String(entity.amount) + " " + (entity.units ?? "")
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.minimumFractionDigits = 0
+        numberFormatter.maximumFractionDigits = entity.amount.truncatingRemainder(dividingBy: 1) == 0 ? 0 : 1
+        let stringAmount = numberFormatter.string(from: NSNumber(value: entity.amount)) ?? ""
+        cell.ingredientAmount?.text = stringAmount + " " + (entity.units ?? "")
+        
         return cell
     }
 }

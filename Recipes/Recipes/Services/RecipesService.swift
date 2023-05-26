@@ -156,7 +156,7 @@ class RecipesService: ServiceBase {
             ]
         )
         let response: GraphQlGenericResponse<Recipe> = await HttpClient.shared.queryAsync(request, propertyName: "recipe")
-        print(response.data)
+        
         return response.data;
     }
     
@@ -174,10 +174,8 @@ class RecipesService: ServiceBase {
             ]
         )
         let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
-        if response.errors == nil{
-            return true
-        }
-        return false
+        
+        return response.errors == nil
     }
     
     func deleteSaved(id: String) async -> Bool{
@@ -194,10 +192,8 @@ class RecipesService: ServiceBase {
             ]
         )
         let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
-        if response.errors == nil{
-            return true
-        }
-        return false
+        
+        return response.errors == nil
     }
     
     
