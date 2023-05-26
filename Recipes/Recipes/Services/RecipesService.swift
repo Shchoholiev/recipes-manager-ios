@@ -182,14 +182,14 @@ class RecipesService: ServiceBase {
     func deleteSaved(id: String) async -> Bool{
         let request = GraphQlRequest(
             query: """
-               mutation Mutation($dto: SavedRecipeCreateDtoInput!) {
-                 addSavedRecipe(dto: $dto) {
-                   recipeId
+               mutation DeleteSavedRecipe($recipeId: String!) {
+                 deleteSavedRecipe(recipeId: $recipeId) {
+                   isSuccessful
                  }
                }
             """,
             variables: [
-                "dto": ["recipeId" : id]
+                "recipeId": id
             ]
         )
         let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)

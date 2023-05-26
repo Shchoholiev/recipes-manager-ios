@@ -70,8 +70,10 @@ class RecipeViewController: UIViewController {
                     categoryName.text = safeRecipe.categories.first?.name
                     recipeName.text = safeRecipe.name
                     contentLabel.text = safeRecipe.ingredientsText
-                    if safeRecipe.isSaved! == true{
-                        savedButton.alpha = 0.6
+                    if safeRecipe.isSaved == true{
+                        savedButton.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)
+                    }else{
+                        savedButton.setImage(UIImage(systemName: "bookmark.fill"), for:.normal)
                     }
                 }
             }
@@ -136,19 +138,29 @@ class RecipeViewController: UIViewController {
         }
     }
     
-    @IBAction func saveButtonPushed(_ sender: Any) {
-        savedButton.isEnabled = false
+    @IBAction func saveButtonPushed(_ sender: UIButton) {
+        //savedButton.isEnabled = false
         Task{
             if let id = recipe?.id {
-                let result = await recipesService.saveRecipe(id: id)
-                if result {
-                    recipe?.isSaved = true
+                print(id)
+                if !(recipe?.isSaved!)!{
+                    sender.isEnabled = false
+                    let result = await recipesService.saveRecipe(id: id)
+                    if result {
+                        recipe?.isSaved = true
+                        sender.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)
+                    }
+                    sender.isEnabled = true
+                }else{
+                    sender.isEnabled = false
+                    let result = await recipesService.deleteSaved(id: id)
+                    if result {
+                        recipe?.isSaved = false
+                        sender.setImage(UIImage(systemName: "bookmark.fill"), for:.normal)
+                    }
+                    sender.isEnabled = true
                 }
             }
-        }
-        if recipe?.isSaved == true {
-            recipe?.isSaved = false
-            savedButton.alpha = 1
         }
     }
 }

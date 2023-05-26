@@ -19,7 +19,7 @@ class IngredientCell: UITableViewCell {
         super.awakeFromNib()
         ingredientWrapper.layer.cornerRadius = 10
         ingredientWrapper.layer.borderWidth = 1
-        ingredientWrapper.layer.backgroundColor = CGColor(gray: 0.15, alpha: 1)
+        ingredientWrapper.layer.backgroundColor = CGColor(gray: 0.85, alpha: 0.35)
         ingredientWrapper.layer.borderColor = CGColor(gray: 0.15, alpha: 1)
         ingredientWrapper.clipsToBounds = true
     }
