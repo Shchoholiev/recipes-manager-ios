@@ -100,18 +100,18 @@ class RecipeViewController: UIViewController {
             let view = segue.destination as! AddRecipeViewController
             view.isUpdate = true
             view.viewDidLoad()
-            if let id = recipeOld?.id {
+            if let id = recipe?.id {
                 view.recipeId = id
             }
             view.name.text = recipeOld?.name
-            view.thumbnailLink.text = recipeOld?.thumbnail
-            view.setImage()
-            view.ingredients.text = recipeOld?.ingredients
-            view.text.text = recipeOld?.text
-            if let categoryId = recipeOld?.category.id {
-                view.selectedCategoryId = categoryId
-            }
-            view.selectedCategoryText.text = recipeOld?.category.name
+//            view.thumbnailLink.text = recipeOld?.thumbnail
+//            view.setImage()
+//            view.ingredients.text = recipeOld?.ingredients
+//            view.text.text = recipeOld?.text
+//            if let categoryId = recipeOld?.category.id {
+//                view.selectedCategoryId = categoryId
+//            }
+//            view.selectedCategoryText.text = recipeOld?.category.name
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
             view.setPage(pageNumber: 1)

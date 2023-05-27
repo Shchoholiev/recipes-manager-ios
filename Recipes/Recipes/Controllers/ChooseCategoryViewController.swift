@@ -17,6 +17,8 @@ class ChooseCategoryViewController: UIViewController {
     
     var categories = [CategoryOld]()
     
+    var chosenCategories = [Category]()
+    
     var currentPage = 1
     
     var totalPages = 1
@@ -151,3 +153,12 @@ extension ChooseCategoryViewController: UITextFieldDelegate {
     }
 }
 
+//MARK: - CategoryCellDelegate
+extension ChooseCategoryViewController: CategoryCellDelegate {
+    
+    func categoryCellDidTap(_ cell: CategoryCell) {
+        if let category = cell.category {
+            chosenCategories.append(category)
+        }
+    }
+}
