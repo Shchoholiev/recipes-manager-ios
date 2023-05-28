@@ -34,14 +34,19 @@ class HttpClient {
         return await graphQlClient.queryAsync(graphQlRequest, propertyName: propertyName)
     }
     
-    func postAsync<TIn: Encodable, TOut: Decodable>(_ data: TIn) async -> TOut? {
+    func postAsync<TIn: Encodable, TOut: Decodable>(_ path: String, _ data: TIn) async throws -> TOut {
         await self.checkAccessTokenAsync()
-        return await restClient.postAsync(data)
+        return try await restClient.postAsync(path, data)
     }
     
-    func putAsync<TIn: Encodable, TOut: Decodable>(_ data: TIn) async -> TOut? {
+    func postAsync<TOut: Decodable>(_ path: String, _ formData: Data, _ contentType: String) async throws -> TOut {
         await self.checkAccessTokenAsync()
-        return await restClient.putAsync(data)
+        return try await restClient.postAsync(path, formData, contentType)
+    }
+    
+    func putAsync<TIn: Encodable, TOut: Decodable>(_ path: String, _ data: TIn) async throws -> TOut {
+        await self.checkAccessTokenAsync()
+        return try await restClient.putAsync(path, data)
     }
     
     private func checkAccessTokenAsync() async {
