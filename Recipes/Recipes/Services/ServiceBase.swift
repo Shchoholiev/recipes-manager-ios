@@ -12,6 +12,6 @@ class ServiceBase {
     let baseUrl: String
     
     init(url: String) {
-        baseUrl = "https://sh-recipes-api.azurewebsites.net/api\(url)"
+        baseUrl = ""
     }
 }

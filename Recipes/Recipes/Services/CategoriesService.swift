@@ -13,19 +13,42 @@ class CategoriesService: ServiceBase {
         super.init(url: "/categories")
     }
     
-    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<CategoryOld>? {
-        let url = URL(string: "\(baseUrl)/page/\(pageNumber)")
-        if let safeUrl = url {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: safeUrl)
-                let categories = try JSONDecoder().decode(PaginationWrapper<CategoryOld>.self, from: data)
-                return categories
-            } catch {
-                print(error)
-            }
-        }
-        
-        return nil
+//    func getPageAsync(pageNumber: Int) async -> PaginationWrapper<CategoryOld>? {
+//        let url = URL(string: "\(baseUrl)/page/\(pageNumber)")
+//        if let safeUrl = url {
+//            do {
+//                let (data, _) = try await URLSession.shared.data(from: safeUrl)
+//                let categories = try JSONDecoder().decode(PaginationWrapper<CategoryOld>.self, from: data)
+//                return categories
+//            } catch {
+//                print(error)
+//            }
+//        }
+//
+//        return nil
+//    }
+    
+    func getPageAsync(pageNumber: Int = 1, pageSize: Int = 10) async -> PagedList<Category>? {
+        let request = GraphQlRequest(
+            query: """
+               query Categories($pageNumber: Int!, $pageSize: Int!) {
+                 categories(pageNumber: $pageNumber, pageSize: $pageSize) {
+                   items {
+                     id
+                     name
+                   }
+                   totalPages
+                 }
+               }
+            """,
+            variables: [
+                "pageNumber": pageNumber,
+                "pageSize": pageSize
+            ]
+        )
+        let response: GraphQlGenericResponse<PagedList<Category>> = await HttpClient.shared.queryAsync(request, propertyName: "categories")
+    
+        return response.data;
     }
     
     func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<CategoryOld>? {
