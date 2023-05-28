@@ -27,6 +27,10 @@ class CategoryCell: UITableViewCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
         addGestureRecognizer(tapGesture)
     }
+    
+    func setValues() -> Void {
+        categoryName.text = category?.name
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

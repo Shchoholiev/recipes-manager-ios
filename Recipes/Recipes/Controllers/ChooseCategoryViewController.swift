@@ -15,7 +15,7 @@ class ChooseCategoryViewController: UIViewController {
     
     let categoriesService = CategoriesService()
     
-    var categories = [CategoryOld]()
+    var categories = [Category]()
     
     var chosenCategories = [Category]()
     
@@ -27,10 +27,10 @@ class ChooseCategoryViewController: UIViewController {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
         
-        addPage(pageNumber: currentPage)
+        setPage(pageNumber: currentPage)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: "CategoryChooseCell", bundle: nil), forCellReuseIdentifier: "CategoryChooseCell")
+        tableView.register(UINib(nibName: "CategoryCell", bundle: nil), forCellReuseIdentifier: "CategoryCell")
         searchField.delegate = self
     }
     
@@ -40,7 +40,12 @@ class ChooseCategoryViewController: UIViewController {
             if let safePage = categoriesPage {
                 categories = safePage.items
                 currentPage = pageNumber
-                totalPages = safePage.pagesCount
+                totalPages = safePage.totalPages
+                tableView.reloadData()
+            } else {
+                categories = []
+                currentPage = pageNumber
+                totalPages = 0
                 tableView.reloadData()
             }
         }
@@ -51,7 +56,7 @@ class ChooseCategoryViewController: UIViewController {
             let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
             if let safePage = categoriesPage {
                 categories.append(contentsOf: safePage.items)
-                totalPages = safePage.pagesCount
+                totalPages = safePage.totalPages
                 tableView.reloadData()
             }
         }
@@ -59,35 +64,35 @@ class ChooseCategoryViewController: UIViewController {
     
     func search(pageNumber: Int, filter: String) {
         Task {
-            let categoriesPage = await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = categoriesPage {
-                categories = safePage.items
-                currentPage = pageNumber
-                totalPages = safePage.pagesCount
-                tableView.reloadData()
-            }
+//            let categoriesPage = await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = categoriesPage {
+//                categories = safePage.items
+//                currentPage = pageNumber
+//                totalPages = safePage.pagesCount
+//                tableView.reloadData()
+//            }
         }
     }
     
     func addSearchPage(pageNumber: Int, filter: String) {
-        Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = categoriesPage {
-                categories.append(contentsOf: safePage.items)
-                tableView.reloadData()
-            }
-        }
+//        Task {
+//            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = categoriesPage {
+//                categories.append(contentsOf: safePage.items)
+//                tableView.reloadData()
+//            }
+//        }
     }
     
-    var chooseCategoryCallback: ((_ category: CategoryOld) -> Void)? = nil
+    var chooseCategoryCallback: ((_ category: Category) -> Void)? = nil
     
-    @objc func chooseCategory(sender: UIView) {
-        let chosenCategory = categories.first(where: { $0.id == sender.tag } )
-        if let safeCategory = chosenCategory, let callback = chooseCategoryCallback {
-            callback(safeCategory)
-        }
-        performSegue(withIdentifier: "unwindToAddRecipe", sender: self)
-    }
+//    @objc func chooseCategory(sender: UIView) {
+//        let chosenCategory = categories.first(where: { $0.id == sender.tag } )
+//        if let safeCategory = chosenCategory, let callback = chooseCategoryCallback {
+//            callback(safeCategory)
+//        }
+//        performSegue(withIdentifier: "unwindToAddRecipe", sender: self)
+//    }
     
     @objc func deleteCategory(sender: UIView) {
         let id = sender.tag
@@ -108,13 +113,18 @@ extension ChooseCategoryViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryChooseCell", for: indexPath) as! CategoryChooseCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
         let category = categories[indexPath.row]
-        cell.categoryWrapper.tag = category.id
-        cell.categoryName.text = category.name
-        cell.categoryWrapper.setOnClickListener(action: chooseCategory)
-        cell.deleteButton.tag = category.id
-        cell.deleteButton.setOnClickListener(action: deleteCategory)
+        cell.category = category
+        cell.delegate = self
+        cell.setValues()
+        
+        if chosenCategories.contains(where: { $0.id == category.id }) {
+            cell.categoryWrapper.backgroundColor = UIColor(named: "AccentColor")
+        } else {
+            cell.categoryWrapper.backgroundColor = UIColor.clear
+        }
+        
         return cell
     }
 }
@@ -122,8 +132,7 @@ extension ChooseCategoryViewController: UITableViewDataSource {
 //MARK: - UITableViewDelegate
 extension ChooseCategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastItem = categories.count - 1
-        if indexPath.row == lastItem {
+        if indexPath.row == categories.count - 3 {
             if currentPage < totalPages {
                 currentPage += 1
                 addPage(pageNumber: currentPage)
@@ -158,7 +167,17 @@ extension ChooseCategoryViewController: CategoryCellDelegate {
     
     func categoryCellDidTap(_ cell: CategoryCell) {
         if let category = cell.category {
-            chosenCategories.append(category)
+            if let chooseCallback = chooseCategoryCallback {
+                chooseCallback(category)
+            }
+            if let index = chosenCategories.firstIndex(where: { $0.id == category.id }) {
+                chosenCategories.remove(at: index)
+                cell.categoryWrapper.backgroundColor = UIColor.clear
+            } else {
+                chosenCategories.append(category)
+                cell.categoryWrapper.backgroundColor = UIColor(named: "AccentColor")
+            }
         }
     }
 }
+

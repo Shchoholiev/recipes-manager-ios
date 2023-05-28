@@ -38,26 +38,26 @@ class CategoriesViewController: UIViewController {
     }
     
     func setPage(pageNumber: Int) {
-        Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
-            if let safePage = categoriesPage {
-                categories = safePage.items
-                currentPage = pageNumber
-                totalPages = safePage.pagesCount
-                tableView.reloadData()
-            }
-        }
+//        Task {
+//            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
+//            if let safePage = categoriesPage {
+//                categories = safePage.items
+//                currentPage = pageNumber
+//                totalPages = safePage.pagesCount
+//                tableView.reloadData()
+//            }
+//        }
     }
     
     func addPage(pageNumber: Int) {
-        Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
-            if let safePage = categoriesPage {
-                categories.append(contentsOf: safePage.items)
-                totalPages = safePage.pagesCount
-                tableView.reloadData()
-            }
-        }
+//        Task {
+//            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
+//            if let safePage = categoriesPage {
+//                categories.append(contentsOf: safePage.items)
+//                totalPages = safePage.pagesCount
+//                tableView.reloadData()
+//            }
+//        }
     }
     
     func search(pageNumber: Int, filter: String) {

@@ -9,6 +9,8 @@ import UIKit
 
 class RecipeViewController: UIViewController {
     
+    @IBOutlet weak var thumbnailLoadingIndicator: UIActivityIndicatorView!
+    
     @IBOutlet weak var thumbnail: UIImageView!
     
     @IBOutlet weak var categoryName: UILabel!
@@ -53,10 +55,25 @@ class RecipeViewController: UIViewController {
                 recipe = await recipesService.getRecipeAsync(id: safeId)
                 if let safeRecipe = recipe {
                     Task {
-                        let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + (safeRecipe.thumbnail?.originalPhotoGuid)! + "." + (safeRecipe.thumbnail?.extension)!)
-                        if let safeData = imageData {
-                            thumbnail.image = UIImage(data: safeData)
-                            thumbnail.contentMode = .scaleAspectFill
+                        if let image = safeRecipe.thumbnail {
+                            if let thumbnailGuid = image.originalPhotoGuid {
+                                thumbnail.image = UIImage(systemName: "bookmark.slash.fill")
+                                let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnailGuid + "." + (safeRecipe.thumbnail?.extension)!)
+                                if let safeData = imageData {
+                                    thumbnailLoadingIndicator.stopAnimating()
+                                    thumbnail.contentMode = .scaleAspectFill
+                                    thumbnail.image = UIImage(data: safeData)
+                                } else {
+                                    thumbnail.contentMode = .center
+                                    thumbnail.image = UIImage(systemName: "photo")
+                                }
+                            } else {
+                               
+                            }
+                        } else {
+                            thumbnailLoadingIndicator.stopAnimating()
+                            thumbnail.contentMode = .center
+                            thumbnail.image = UIImage(systemName: "photo")
                         }
                     }
                     
