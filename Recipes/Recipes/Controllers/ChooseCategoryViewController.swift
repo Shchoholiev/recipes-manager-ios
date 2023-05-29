@@ -119,14 +119,6 @@ class ChooseCategoryViewController: UIViewController {
 //        }
     }
     
-    func showAlert(title: String, message: String) {
-        let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in })
-        dialogMessage.addAction(ok)
-        
-        self.present(dialogMessage, animated: true, completion: nil)
-    }
-    
     func reset() {
         categoryName.text = nil
         createButton.isEnabled = true

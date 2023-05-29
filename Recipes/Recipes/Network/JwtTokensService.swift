@@ -15,8 +15,14 @@ class JwtTokensService {
     let refreshTokenIdentifier = "refreshToken"
     
     func storeTokensInKeychain(tokens: TokensModel) {
+        GlobalUser.shared.setUserFromJwt(tokens.accessToken)
         storeTokenInKeychain(accessTokenIdentifier, tokens.accessToken)
         storeTokenInKeychain(refreshTokenIdentifier, tokens.refreshToken)
+    }
+    
+    func clearTokensInKeychain() {
+        removeItemFromKeychain(accessTokenIdentifier)
+        removeItemFromKeychain(refreshTokenIdentifier)
     }
     
     func isExpired() -> Bool {
@@ -105,6 +111,23 @@ class JwtTokensService {
             } else {
                 print("Error storing value of: \"\(identifier)\" in Keychain")
             }
+        }
+    }
+    
+    func removeItemFromKeychain(_ identifier: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: identifier,
+            kSecReturnAttributes as String: true
+        ]
+        
+        let status = SecItemDelete(query as CFDictionary)
+        if status == errSecSuccess {
+            print("Item removed successfully")
+        } else if status == errSecItemNotFound {
+            print("Item not found in Keychain")
+        } else {
+            print("Error removing item from Keychain: \(status)")
         }
     }
 }

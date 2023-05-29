@@ -22,7 +22,7 @@ class HttpClient {
     
     private var accessToken: String?
     
-    init() {
+    private init() {
         graphQlClient = GraphQlClient(baseUrl)
         restClient = RestClient(baseUrl)
     }
@@ -106,25 +106,37 @@ class HttpClient {
     }
     
     private func checkAccessTokenAsync() async {
+        var tokensModel: TokensModel? = nil
         if jwtTokensService.isExpired() {
-            let tokensModel = await getTokensAsync()
+            tokensModel = await getTokensAsync()
             if let tokens = tokensModel {
                 jwtTokensService.storeTokensInKeychain(tokens: tokens)
-                accessToken = tokens.accessToken
-                graphQlClient.accessToken = tokens.accessToken
-                restClient.accessToken = tokens.accessToken
             }
         } else {
-            let tokensModel = jwtTokensService.getTokensFromKeychain()
-            if let tokens = tokensModel {
-                accessToken = tokens.accessToken
-                graphQlClient.accessToken = tokens.accessToken
-                restClient.accessToken = tokens.accessToken
-            }
+            tokensModel = jwtTokensService.getTokensFromKeychain()
+        }
+        if let tokens = tokensModel {
+            GlobalUser.shared.setUserFromJwt(tokens.accessToken)
+            accessToken = tokens.accessToken
+            graphQlClient.accessToken = tokens.accessToken
+            restClient.accessToken = tokens.accessToken
+        } else {
+            let sceneDelegate = await UIApplication.shared.connectedScenes
+                    .first!.delegate as! SceneDelegate
+            await sceneDelegate.showLoginScreen()
         }
     }
     
     private func getTokensAsync() async -> TokensModel? {
+        let tokensModel = jwtTokensService.getTokensFromKeychain()
+        if let tokens = tokensModel, !tokens.accessToken.isEmpty, !tokens.refreshToken.isEmpty {
+            return await refreshTokens(tokens)
+        } else {
+            return await loginGuest()
+        }
+    }
+    
+    private func loginGuest() async -> TokensModel? {
         let vendorIdentifier = self.getVendorIdentifier()
         if let vendorId = vendorIdentifier {
             let name = getDeviceName()
@@ -152,6 +164,29 @@ class HttpClient {
         }
         
         return nil
+    }
+    
+    private func refreshTokens(_ tokens: TokensModel) async -> TokensModel? {
+        let request = GraphQlRequest(
+            query: """
+                mutation RefreshUserToken($model: TokensModelInput!) {
+                  refreshUserToken(model: $model) {
+                    accessToken
+                    refreshToken
+                  }
+                }
+            """,
+            variables: [
+                "model": [
+                    "accessToken": tokens.accessToken,
+                    "refreshToken": tokens.refreshToken
+                ]
+            ]
+        )
+        
+        let response: GraphQlGenericResponse<TokensModel> = await graphQlClient.queryAsync(request, propertyName: "refreshUserToken")
+        
+        return response.data
     }
     
     private func getDeviceName() -> String {

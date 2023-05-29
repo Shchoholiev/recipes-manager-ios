@@ -20,6 +20,11 @@
 		902D25002A10101C00C1C99B /* TokensModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D24FF2A10101C00C1C99B /* TokensModel.swift */; };
 		902D25022A101C2400C1C99B /* GraphQlGenericResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */; };
 		9034060D29AC362F000F3150 /* HealthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9034060C29AC362F000F3150 /* HealthService.swift */; };
+		9045BA972A244C860038530F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BA962A244C860038530F /* ProfileViewController.swift */; };
+		9045BA992A24539B0038530F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BA982A24539B0038530F /* LoginViewController.swift */; };
+		9045BA9B2A24EDD30038530F /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BA9A2A24EDD30038530F /* AuthService.swift */; };
+		9045BA9E2A24EE190038530F /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BA9D2A24EE190038530F /* LoginModel.swift */; };
+		9045BAA12A24FC4E0038530F /* GlobalUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BAA02A24FC4E0038530F /* GlobalUser.swift */; };
 		9051BFD02A2432BE001D27E2 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051BFCF2A2432BE001D27E2 /* Ingredient.swift */; };
 		9084E828297D9F9700A08F28 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */; };
 		90A259A3293FF4050017E68B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A259A2293FF4050017E68B /* AppDelegate.swift */; };
@@ -75,6 +80,11 @@
 		902D24FF2A10101C00C1C99B /* TokensModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokensModel.swift; sourceTree = "<group>"; };
 		902D25012A101C2400C1C99B /* GraphQlGenericResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphQlGenericResponse.swift; sourceTree = "<group>"; };
 		9034060C29AC362F000F3150 /* HealthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthService.swift; sourceTree = "<group>"; };
+		9045BA962A244C860038530F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		9045BA982A24539B0038530F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		9045BA9A2A24EDD30038530F /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		9045BA9D2A24EE190038530F /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
+		9045BAA02A24FC4E0038530F /* GlobalUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalUser.swift; sourceTree = "<group>"; };
 		9051BFCF2A2432BE001D27E2 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		90A2599F293FF4050017E68B /* Recipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,6 +155,22 @@
 			path = Network;
 			sourceTree = "<group>";
 		};
+		9045BA9C2A24EE070038530F /* Identity */ = {
+			isa = PBXGroup;
+			children = (
+				9045BA9D2A24EE190038530F /* LoginModel.swift */,
+			);
+			path = Identity;
+			sourceTree = "<group>";
+		};
+		9045BA9F2A24FC3F0038530F /* Globals */ = {
+			isa = PBXGroup;
+			children = (
+				9045BAA02A24FC4E0038530F /* GlobalUser.swift */,
+			);
+			path = Globals;
+			sourceTree = "<group>";
+		};
 		90A25996293FF4050017E68B = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +190,7 @@
 		90A259A1293FF4050017E68B /* Recipes */ = {
 			isa = PBXGroup;
 			children = (
+				9045BA9F2A24FC3F0038530F /* Globals */,
 				902D24F82A0FEE8C00C1C99B /* Network */,
 				90A259B8293FF9830017E68B /* Models */,
 				90A259B9293FF98B0017E68B /* Services */,
@@ -201,6 +228,8 @@
 				90A259DD29477ECA0017E68B /* RecipeViewController.swift */,
 				901EE70A2948210600B5EBBA /* RecipesByCategoryViewController.swift */,
 				90179DEA295A344D003F1800 /* AddRecipeViewController.swift */,
+				9045BA962A244C860038530F /* ProfileViewController.swift */,
+				9045BA982A24539B0038530F /* LoginViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -208,6 +237,7 @@
 		90A259B8293FF9830017E68B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9045BA9C2A24EE070038530F /* Identity */,
 				90D9C1082A22ABDC003CD0BD /* CreateDto */,
 				90A259BA293FF9AE0017E68B /* CategoryOld.swift */,
 				90B98ADB2A16EFDD0091D7E5 /* Category.swift */,
@@ -235,6 +265,7 @@
 				90A259C62940050E0017E68B /* CategoriesService.swift */,
 				90A259D8294676CC0017E68B /* HelpersService.swift */,
 				9034060C29AC362F000F3150 /* HealthService.swift */,
+				9045BA9A2A24EDD30038530F /* AuthService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -387,14 +418,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				90179DEB295A344D003F1800 /* AddRecipeViewController.swift in Sources */,
+				9045BA9B2A24EDD30038530F /* AuthService.swift in Sources */,
 				90069F1C2A10384000D76D6F /* JwtTokensService.swift in Sources */,
 				FE5FD1AB2A122AD5005E172E /* Image.swift in Sources */,
 				902D24FC2A0FF22500C1C99B /* GraphQlRequest.swift in Sources */,
 				902D24FE2A0FF6AC00C1C99B /* GraphQlResponse.swift in Sources */,
 				90069F232A105AD600D76D6F /* RestClient.swift in Sources */,
+				9045BA972A244C860038530F /* ProfileViewController.swift in Sources */,
 				90B98ADA2A16E2FB0091D7E5 /* PagedList.swift in Sources */,
 				90C6E77E298341FB000F5B5E /* UIViewControllerExtensions.swift in Sources */,
 				90A259D629466EF70017E68B /* RecipeCell.swift in Sources */,
+				9045BAA12A24FC4E0038530F /* GlobalUser.swift in Sources */,
 				90A259C5293FFCC20017E68B /* ServiceBase.swift in Sources */,
 				902D24FA2A0FEEB300C1C99B /* GraphQlClient.swift in Sources */,
 				90A259D229466A6D0017E68B /* TabBarController.swift in Sources */,
@@ -403,6 +437,7 @@
 				90A259A7293FF4050017E68B /* CategoriesViewController.swift in Sources */,
 				FE5FD1AD2A122C18005E172E /* ImageUploadStates.swift in Sources */,
 				90D9C1042A21A938003CD0BD /* ButtonCell.swift in Sources */,
+				9045BA992A24539B0038530F /* LoginViewController.swift in Sources */,
 				FE53DE892A200D3400E2195A /* IngredientCell.swift in Sources */,
 				FEDB96032A154A2A000B756E /* RecipeOld.swift in Sources */,
 				90D9C10A2A22ABEF003CD0BD /* RecipeCreateDto.swift in Sources */,
@@ -420,6 +455,7 @@
 				90A259BB293FF9AE0017E68B /* CategoryOld.swift in Sources */,
 				90A259C3293FFC290017E68B /* RecipesService.swift in Sources */,
 				902D25022A101C2400C1C99B /* GraphQlGenericResponse.swift in Sources */,
+				9045BA9E2A24EE190038530F /* LoginModel.swift in Sources */,
 				90C6E7882984B90D000F5B5E /* CategoryChooseCell.swift in Sources */,
 				90A259DC29468A9E0017E68B /* UIViewClickExstension.swift in Sources */,
 				901EE70B2948210600B5EBBA /* RecipesByCategoryViewController.swift in Sources */,
