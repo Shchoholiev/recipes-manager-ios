@@ -9,6 +9,8 @@ import UIKit
 
 class RecipeViewController: UIViewController {
     
+    @IBOutlet weak var thumbnailLoadingIndicator: UIActivityIndicatorView!
+    
     @IBOutlet weak var thumbnail: UIImageView!
     
     @IBOutlet weak var categoryName: UILabel!
@@ -53,10 +55,25 @@ class RecipeViewController: UIViewController {
                 recipe = await recipesService.getRecipeAsync(id: safeId)
                 if let safeRecipe = recipe {
                     Task {
-                        let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + (safeRecipe.thumbnail?.originalPhotoGuid)! + "." + (safeRecipe.thumbnail?.extension)!)
-                        if let safeData = imageData {
-                            thumbnail.image = UIImage(data: safeData)
-                            thumbnail.contentMode = .scaleAspectFill
+                        if let image = safeRecipe.thumbnail {
+                            if let thumbnailGuid = image.originalPhotoGuid {
+                                thumbnail.image = UIImage(systemName: "bookmark.slash.fill")
+                                let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnailGuid + "." + (safeRecipe.thumbnail?.extension)!)
+                                if let safeData = imageData {
+                                    thumbnailLoadingIndicator.stopAnimating()
+                                    thumbnail.contentMode = .scaleAspectFill
+                                    thumbnail.image = UIImage(data: safeData)
+                                } else {
+                                    thumbnail.contentMode = .center
+                                    thumbnail.image = UIImage(systemName: "photo")
+                                }
+                            } else {
+                               
+                            }
+                        } else {
+                            thumbnailLoadingIndicator.stopAnimating()
+                            thumbnail.contentMode = .center
+                            thumbnail.image = UIImage(systemName: "photo")
                         }
                     }
                     
@@ -100,18 +117,18 @@ class RecipeViewController: UIViewController {
             let view = segue.destination as! AddRecipeViewController
             view.isUpdate = true
             view.viewDidLoad()
-            if let id = recipeOld?.id {
+            if let id = recipe?.id {
                 view.recipeId = id
             }
             view.name.text = recipeOld?.name
-            view.thumbnailLink.text = recipeOld?.thumbnail
-            view.setImage()
-            view.ingredients.text = recipeOld?.ingredients
-            view.text.text = recipeOld?.text
-            if let categoryId = recipeOld?.category.id {
-                view.selectedCategoryId = categoryId
-            }
-            view.selectedCategoryText.text = recipeOld?.category.name
+//            view.thumbnailLink.text = recipeOld?.thumbnail
+//            view.setImage()
+//            view.ingredients.text = recipeOld?.ingredients
+//            view.text.text = recipeOld?.text
+//            if let categoryId = recipeOld?.category.id {
+//                view.selectedCategoryId = categoryId
+//            }
+//            view.selectedCategoryText.text = recipeOld?.category.name
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
             view.setPage(pageNumber: 1)
@@ -178,13 +195,8 @@ extension RecipeViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientCell", for: indexPath) as! IngredientCell
         
         let entity = ingredients[indexPath.row]
-        cell.ingredientName?.text = entity.name
-        
-        let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 0
-        numberFormatter.maximumFractionDigits = entity.amount.truncatingRemainder(dividingBy: 1) == 0 ? 0 : 1
-        let stringAmount = numberFormatter.string(from: NSNumber(value: entity.amount)) ?? ""
-        cell.ingredientAmount?.text = stringAmount + " " + (entity.units ?? "")
+        cell.ingredient = entity
+        cell.render()
         
         return cell
     }

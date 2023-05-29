@@ -68,6 +68,7 @@ class RecipesViewController: UIViewController {
             let recipesPage =  await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: searchField.text ?? "")
             if let safePage = recipesPage {
                 recipes.append(contentsOf: safePage.items)
+                totalPages = safePage.totalPages
                 tableView.reloadData()
             }
         }
@@ -135,7 +136,9 @@ extension RecipesViewController: UITableViewDataSource {
         cell.delegate = self
         let recipe = recipes[indexPath.row]
         cell.recipeName.text = recipe.name
-        cell.recipeCategory.text = recipe.categories[0].name
+        if !recipe.categories.isEmpty {
+            cell.recipeCategory.text = recipe.categories[0].name
+        }
         cell.recipeId = recipe.id
         Task {
             if let thumbnail = recipe.thumbnail {
@@ -174,8 +177,7 @@ extension RecipesViewController: UITextFieldDelegate {
 //MARK: - UITableViewDelegate
 extension RecipesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastItem = recipes.count - 1
-        if indexPath.row == lastItem {
+        if indexPath.row == recipes.count - 3 {
             if currentPage < totalPages {
                 currentPage += 1
                 addPage(pageNumber: currentPage)

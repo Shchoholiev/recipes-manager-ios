@@ -12,58 +12,67 @@ class AddRecipeViewController: UIViewController {
     
     @IBOutlet weak var name: UITextField!
     
-    @IBOutlet weak var thumbnailLink: UITextField!
-    
     @IBOutlet weak var thumbnail: UIImageView!
     
-    @IBOutlet weak var ingredients: UITextView!
+    let imagePickerView = UIImagePickerController()
     
-    @IBOutlet weak var text: UITextView!
+    @IBOutlet weak var contentTypeBar: UISegmentedControl!
     
-    @IBOutlet weak var selectedCategoryBackground: UIView!
+    @IBOutlet weak var contentStackView: UIStackView!
     
-    @IBOutlet weak var selectedCategoryText: UILabel!
+    @IBOutlet weak var content: UITextView!
+    
+    @IBOutlet weak var ingredientsText: UITextView!
+    
+    @IBOutlet weak var ingredientsTableView: UITableView!
+    
+    @IBOutlet weak var ingredientsStackView: UIStackView!
+    
+    @IBOutlet weak var showTextButton: UIButton!
+    
+    @IBOutlet weak var parseIngredientsButton: UIButton!
+    
+    @IBOutlet weak var categoriesTableView: UITableView!
+    
+    @IBOutlet weak var categoriesTableHeight: NSLayoutConstraint!
+    
+    @IBOutlet weak var calories: UITextField!
+    
+    @IBOutlet weak var servings: UITextField!
+    
+    @IBOutlet weak var cookingTime: UITextField!
+    
+    @IBOutlet weak var isPublicSwitch: UISwitch!
     
     @IBOutlet weak var createButton: UIButton!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
-    @IBOutlet weak var newCategoryName: UITextField!
+    var recipesService = RecipesService()
     
-    var selectedCategoryId = 0
+    var helpersService = HelpersService()
     
-    var wasImageUpload = false
+    var ingredientsService = IngredientsService()
     
     var isUpdate = false
     
-    var recipeId = 0
+    var recipeId = ""
     
-    var recipesService = RecipesService()
+    var wasImageUploaded = false
     
-    var categoriesService = CategoriesService()
+    var ingredients = [Ingredient]()
     
-    var helpersService = HelpersService()
+    var categories = [Category]()
+    
+    var scrollViewHeight: CGFloat = 0;
+    
+    var showText = true
+    
+    var recipe: Recipe? = nil
     
     override func viewDidLoad(){
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
-        
-        thumbnail.layer.borderWidth = 1
-        thumbnail.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
-        thumbnail.layer.cornerRadius = 10
-        thumbnail.clipsToBounds = true
-        
-        ingredients.layer.borderWidth = 1
-        ingredients.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
-        ingredients.layer.cornerRadius = 10
-        ingredients.clipsToBounds = true
-        
-        text.layer.borderWidth = 1
-        text.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
-        text.layer.cornerRadius = 10
-        text.clipsToBounds = true
-        
-        selectedCategoryBackground.layer.cornerRadius = 10
         
         if isUpdate {
             createButton.setTitle("Update recipe", for: .normal)
@@ -71,10 +80,54 @@ class AddRecipeViewController: UIViewController {
             createButton.setTitle("Create recipe", for: .normal)
         }
         
-        thumbnailLink.delegate = self
+        thumbnail.layer.borderWidth = 1
+        thumbnail.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
+        thumbnail.layer.cornerRadius = 10
+        thumbnail.clipsToBounds = true
+        let thumbnailTapGesture = UITapGestureRecognizer(target: self, action: #selector(openPhotoPicker))
+        thumbnail.isUserInteractionEnabled = true
+        thumbnail.addGestureRecognizer(thumbnailTapGesture)
+        
+        imagePickerView.sourceType = .photoLibrary
+        imagePickerView.delegate = self
+        
+        contentStackView.isHidden = true
+        showText = ingredients.isEmpty
+        switchIngredientsView(showText)
+        
+//        if recipe?.ingredientsText == nil{
+//            parseIngredientsButton.isEnabled = false
+//            if showText {
+//                showTextButton.isEnabled = false
+//            }
+//        }
+//        
+//        if ingredients.isEmpty && !showText {
+//            showTextButton.isEnabled = false
+//        }
+        
+        ingredientsText.layer.borderWidth = 1
+        ingredientsText.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
+        ingredientsText.layer.cornerRadius = 10
+        ingredientsText.clipsToBounds = true
+        
+        content.layer.borderWidth = 1
+        content.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
+        content.layer.cornerRadius = 10
+        content.clipsToBounds = true
+        
+        ingredientsTableView.dataSource = self
+        ingredientsTableView.register(UINib(nibName: "IngredientCell", bundle: nil), forCellReuseIdentifier: "IngredientCell")
+        ingredientsTableView.delegate = self
+        
+        categoriesTableView.dataSource = self
+        categoriesTableView.register(UINib(nibName: "CategoryChooseCell", bundle: nil), forCellReuseIdentifier: "CategoryChooseCell")
+        categoriesTableView.register(UINib(nibName: "ButtonCell", bundle: nil), forCellReuseIdentifier: "ButtonCell")
         
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        ingredientsText.text = "Flour 1 cup Wheat flour 1/4 cup Baking powder 2 teaspoon Salt a pinch Sugar 2 tablespoons Oil 2 tablespoons Water 1 1/4 cup Vanilla 2 teaspoons"
     }
     
     @IBOutlet weak var contentHeight: NSLayoutConstraint!
@@ -88,61 +141,207 @@ class AddRecipeViewController: UIViewController {
 //        contentHeight.constant = scrollHeight
 //    }
     
-    @IBAction func openPhotoPicker(_ sender: UIButton) {
-        let imagePickerView = UIImagePickerController()
-        imagePickerView.sourceType = .photoLibrary
-        imagePickerView.delegate = self
+    
+    @IBAction func contentBarChanged(_ sender: Any) {
+        switch contentTypeBar.selectedSegmentIndex {
+        case 0:
+            ingredientsStackView.isHidden = false
+            contentStackView.isHidden = true
+            if ingredients.isEmpty || showText {
+                ingredientsText.isHidden = false
+                ingredientsTableView.isHidden = true
+            } else {
+                ingredientsText.isHidden = true
+                ingredientsTableView.isHidden = false
+            }
+            
+        case 1:
+            ingredientsStackView.isHidden = true
+            contentStackView.isHidden = false
+        default:
+            break
+        }
+    }
+    
+    @IBAction func showTextClick(_ sender: UIButton) {
+        showText = !showText
+        switchIngredientsView(showText)
+    }
+    
+    func switchIngredientsView(_ showText: Bool) {
+        if showText {
+            ingredientsText.isHidden = false
+            ingredientsTableView.isHidden = true
+            showTextButton.setTitle("Show Table", for: .normal)
+            parseIngredientsButton.setTitle("Parse ingredients", for: .normal)
+        } else {
+            ingredientsText.isHidden = true
+            ingredientsTableView.isHidden = false
+            showTextButton.setTitle("Show Text", for: .normal)
+            parseIngredientsButton.setTitle("Estimate calories", for: .normal)
+        }
+    }
+    
+    @objc func openPhotoPicker() {
         present(imagePickerView, animated: true)
     }
     
-    @IBAction func showCategories(_ sender: UIButton) {
+    @IBAction func parseIngredientsClick(_ sender: UIButton) {
+        parseIngredientsButton.isEnabled = false
+        showTextButton.isEnabled = false
+        createButton.isEnabled = false
+        if showText {
+            if let text = ingredientsText.text {
+                parseIngredients(text)
+            }
+        } else {
+            if !ingredients.isEmpty {
+                estimateCalories(ingredients)
+            }
+        }
+    }
+    
+    func parseIngredients(_ text: String) {
+        createButton.setTitle("Parsing ingredients...", for: .normal)
+        Task {
+            do {
+                let ingredients = try await ingredientsService.parseIngredients(text)
+                self.ingredients = []
+                ingredientsTableView.reloadData()
+                showText = false;
+                switchIngredientsView(false)
+                for await ingredient in ingredients {
+                    self.ingredients.append(ingredient)
+                    let newIndexPath = IndexPath(row: self.ingredients.count - 1, section: 0)
+                    ingredientsTableView.insertRows(at: [newIndexPath], with: .automatic)
+                }
+                parseIngredientsButton.isEnabled = true
+                showTextButton.isEnabled = true
+                createButton.isEnabled = true
+                createButton.setTitle("Create recipe", for: .normal)
+            } catch {
+                print(error)
+                parseIngredientsButton.isEnabled = true
+                showTextButton.isEnabled = true
+                createButton.isEnabled = true
+                createButton.setTitle("Create recipe", for: .normal)
+            }
+        }
+    }
+    
+    func estimateCalories(_ ingredientsInput: [Ingredient]) {
+        createButton.setTitle("Estimating calories...", for: .normal)
+        Task {
+            do {
+                let ingredients = try await ingredientsService.estimateCalories(ingredientsInput)
+                var index = 0;
+                for await ingredient in ingredients {
+                    self.ingredients[index] = ingredient
+                    let indexPath = IndexPath(row: index, section: 0)
+                    ingredientsTableView.reloadRows(at: [indexPath], with: .automatic)
+                    index += 1
+                }
+                calories.text = String(ingredientsService.calculateTotalCalories(self.ingredients))
+                parseIngredientsButton.isEnabled = true
+                showTextButton.isEnabled = true
+                createButton.isEnabled = true
+                createButton.setTitle("Create recipe", for: .normal)
+            } catch {
+                print(error)
+                parseIngredientsButton.isEnabled = true
+                showTextButton.isEnabled = true
+                createButton.isEnabled = true
+                createButton.setTitle("Create recipe", for: .normal)
+            }
+        }
+    }
+    
+    func showCategories(_ sender: UIButton) {
         self.performSegue(withIdentifier: "showCategories", sender: nil)
     }
     
-    func chooseCategory(_ category: CategoryOld) {
-        selectedCategoryText.text = category.name
-        selectedCategoryId = category.id
-        
-        newCategoryName.text = ""
+    func chooseCategory(_ category: Category) {
+        if let index = categories.firstIndex(where: { $0.id == category.id }) {
+            categories.remove(at: index)
+        } else {
+            categories.append(category)
+        }
+        categoriesTableView.reloadData()
     }
     
     @IBAction func submit(_ sender: UIButton) {
-        sender.isEnabled = false
+        createButton.isEnabled = false
         
-        guard let name = name.text else { return }
-        guard let ingredients = ingredients.text else { return }
-        guard let text = text.text else { return }
-        if selectedCategoryId < 1 { return }
-        
-        Task {
-            var thumbnail = ""
-            if let link = thumbnailLink.text, !link.isEmpty {
-                thumbnail = link
-            } else if wasImageUpload {
-                let thumbnailData = self.thumbnail.image?.jpegData(compressionQuality: 0.2)
-                let uploadedLink = await helpersService.uploadImage(imageData: thumbnailData, blobContainer: "recipes-photos")
-                if let safeThumbnail = uploadedLink {
-                    thumbnail = safeThumbnail
-                }
+        guard let name = name.text, !name.isEmpty else {
+            showAlert(title: "Missing field", message: "Please provide Recipe name.")
+            createButton.isEnabled = true
+            return
+        }
+        if categories.isEmpty {
+            showAlert(title: "Missing field", message: "Please choose at least one Category.")
+            createButton.isEnabled = true
+            return
+        }
+        var calories: Int? = nil
+        if let caloriesString = self.calories?.text, !caloriesString.isEmpty {
+            if let caloriesInt = Int(caloriesString) {
+                calories = caloriesInt
+            } else {
+                showAlert(title: "Invalid data", message: "Please provide valid number of Calories.")
+                createButton.isEnabled = true
+                return
             }
-             
-            let recipe = RecipeOld(id: recipeId, name: name, ingredients: ingredients, text: text, thumbnail: thumbnail, category: CategoryOld(id: selectedCategoryId, name: ""))
+        }
+        var servingsCount: Int? = nil
+        if let servingsString = self.calories?.text, !servingsString.isEmpty {
+            if let servingsInt = Int(servingsString) {
+                servingsCount = servingsInt
+            } else {
+                showAlert(title: "Invalid data", message: "Please provide valid number of Servings.")
+                createButton.isEnabled = true
+                return
+            }
+        }
+        var minutesToCook: Int? = nil
+        if let minutesString = self.cookingTime?.text, !minutesString.isEmpty {
+            if let minutes = Int(minutesString) {
+                minutesToCook = minutes
+            } else {
+                showAlert(title: "Invalid data", message: "Please provide valid number of calories.")
+                createButton.isEnabled = true
+                return
+            }
+        }
+        if isPublicSwitch.isOn {
+            if (!wasImageUploaded && !isUpdate) || ingredients.isEmpty || content.text == nil || minutesToCook == nil {
+                showAlert(title: "Not all Criteria met", message: "To make Recipe public provide: Photo, Ingredients array, Instructions and Cooking Time.")
+                createButton.isEnabled = true
+                return
+            }
+        }
+        Task {
+            let thumbnailData = wasImageUploaded ? thumbnail.image?.jpegData(compressionQuality: 0.8) : nil
+            
+            let recipe = RecipeCreateDto(name: name, text: content.text, thumbnail: thumbnailData, ingredients: ingredients, ingredientsText: ingredientsText.text, categories: categories, calories: calories, servingsCount: servingsCount, minutesToCook: minutesToCook, isPublic: isPublicSwitch.isOn)
             
             var succeded = false
             if isUpdate {
-                succeded = await recipesService.updateRecipe(recipe)
+//                succeded = await recipesService.updateRecipe(recipe)
                 if succeded {
                     self.performSegue(withIdentifier: "unwindToRecipe", sender: nil)
                 }
             } else {
-                succeded = await recipesService.createRecipe(recipe)
+                let result = await recipesService.createRecipe(recipe)
+                if let newRecipe = result {
+                    recipeId = newRecipe.id
+                    succeded = true
+                    reset()
+                    self.performSegue(withIdentifier: "showRecipe", sender: nil)
+                }
             }
             
-            if succeded {
-                showAlert(title: "Success", message: "New recipe added!")
-                reset()
-            } else {
-                showAlert(title: "Error", message: "Error occured while saving recipe.")
+            if !succeded {
+                showAlert(title: "Error", message: "Error occured while saving recipe. Try again Please.")
             }
             
             sender.isEnabled = true
@@ -162,59 +361,64 @@ class AddRecipeViewController: UIViewController {
     }
 
     @objc func keyboardWillChange(notification: NSNotification) {
-
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if newCategoryName.isFirstResponder {
+            if calories.isFirstResponder {
+                self.view.frame.origin.y = -keyboardSize.height
+            }
+            if servings.isFirstResponder {
+                self.view.frame.origin.y = -keyboardSize.height
+            }
+            if cookingTime.isFirstResponder {
                 self.view.frame.origin.y = -keyboardSize.height
             }
         }
     }
     
-    func setImage() {
-        if let imageLink = thumbnailLink.text {
-            Task {
-                let image = await helpersService.downloadImage(from: imageLink)
-                if let imageData = image {
-                    thumbnail.image = UIImage(data: imageData)
-                    thumbnail.contentMode = .scaleAspectFill
-                }
-            }
-        }
-    }
+//    func setImage() {
+//        if let imageLink = thumbnailLink.text {
+//            Task {
+//                let image = await helpersService.downloadImage(from: imageLink)
+//                if let imageData = image {
+//                    thumbnail.image = UIImage(data: imageData)
+//                    thumbnail.contentMode = .scaleAspectFill
+//                }
+//            }
+//        }
+//    }
     
     func reset() {
         name.text = ""
-        thumbnailLink.text = ""
-        ingredients.text = ""
-        text.text = ""
-        selectedCategoryId = 0
-        selectedCategoryText.text = "None"
+//        thumbnailLink.text = ""
+//        ingredients.text = ""
+//        text.text = ""
+//        selectedCategoryId = 0
+//        selectedCategoryText.text = "None"
         thumbnail.contentMode = .center
         thumbnail.image = UIImage(systemName: "photo")
     }
     
     @IBAction func unwindToAddRecipe( _ seg: UIStoryboardSegue) {}
     
-    @IBAction func createCategory(_ sender: UIButton) {
-        sender.isEnabled = false
-        
-        if let categoryName = newCategoryName.text, !categoryName.isEmpty {
-            Task {
-                let newId = await categoriesService.createCategory(CategoryOld(id: 0, name: categoryName))
-                if newId > 0 {
-                    selectedCategoryText.text = newCategoryName.text
-                    selectedCategoryId = newId
-                    newCategoryName.text = ""
-                } else {
-                    showAlert(title: "Error", message: "Error occured while saving category.")
-                }
-                
-                sender.isEnabled = true
-            }
-        } else {
-            showAlert(title: "Error", message: "Enter category name.")
-        }
-    }
+//    @IBAction func createCategory(_ sender: UIButton) {
+//        sender.isEnabled = false
+//
+//        if let categoryName = newCategoryName.text, !categoryName.isEmpty {
+//            Task {
+//                let newId = await categoriesService.createCategory(CategoryOld(id: 0, name: categoryName))
+//                if newId > 0 {
+//                    selectedCategoryText.text = newCategoryName.text
+//                    selectedCategoryId = newId
+//                    newCategoryName.text = ""
+//                } else {
+//                    showAlert(title: "Error", message: "Error occured while saving category.")
+//                }
+//
+//                sender.isEnabled = true
+//            }
+//        } else {
+//            showAlert(title: "Error", message: "Enter category name.")
+//        }
+//    }
     
     func showAlert(title: String, message: String) {
         let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -229,11 +433,15 @@ class AddRecipeViewController: UIViewController {
         case "showCategories":
             let view = segue.destination as! ChooseCategoryViewController
             view.chooseCategoryCallback = chooseCategory
+            view.chosenCategories = categories
+        case "showRecipe":
+            let view = segue.destination as! RecipeViewController
+            view.id = recipeId
         case "unwindToRecipe":
             let view = segue.destination as! RecipeViewController
             Task {
                 if let recipe = await recipesService.getRecipeAsync(id: recipeId) {
-                    view.recipeOld = recipe
+//                    view.recipeOld = recipe
                     view.viewDidLoad()
                 }
             }
@@ -267,8 +475,7 @@ extension AddRecipeViewController: UIImagePickerControllerDelegate, UINavigation
         if let image = info[.originalImage] as? UIImage {
             thumbnail.contentMode = .scaleAspectFill
             thumbnail.image = image
-            thumbnailLink.text = ""
-            wasImageUpload = true
+            wasImageUploaded = true
         }
     }
 }
@@ -277,12 +484,82 @@ extension AddRecipeViewController: UIImagePickerControllerDelegate, UINavigation
 extension AddRecipeViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        setImage()
+//        setImage()
         textField.endEditing(true)
         return true
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         return true
+    }
+}
+
+//MARK: - UITableViewDataSource
+extension AddRecipeViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView.tag == 1 {
+            // Ingredients table
+            return ingredients.count;
+        } else if tableView.tag == 2 {
+            // Categories table
+            if (scrollViewHeight == 0) {
+                scrollViewHeight = scrollView.contentSize.height
+            }
+            categoriesTableHeight.constant = CGFloat(categories.count * 54 + 43)
+            scrollView.contentSize = CGSize(width: scrollView.contentSize.width, height: scrollViewHeight + CGFloat(categories.count * 54))
+
+            return categories.count + 1;
+        }
+        return 0
+    }
+        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if tableView.tag == 1 {
+            // Ingredients table
+            let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientCell", for: indexPath) as! IngredientCell
+            
+            let entity = ingredients[indexPath.row]
+            cell.ingredient = entity
+            cell.render()
+            
+            return cell
+        } else {
+            // Categories table
+            if indexPath.row < categories.count {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryChooseCell", for: indexPath) as! CategoryChooseCell
+                let category = categories[indexPath.row]
+                cell.category = category
+                cell.delegate = self
+                cell.setValues()
+                return cell;
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonCell", for: indexPath) as! ButtonCell
+                cell.button.setTitle("Choose categories", for: .normal)
+                cell.onClick = showCategories
+                
+                return cell;
+            }
+        }
+    }
+}
+
+//MARK: - CategoryChooseCellDelegate
+extension AddRecipeViewController: CategoryChooseCellDelegate {
+    func categoryDeleteDidTap(_ cell: CategoryChooseCell) {
+        if let index = categories.firstIndex(where: { $0.id == cell.category?.id }) {
+            categories.remove(at: index)
+            categoriesTableView.reloadData()
+        }
+    }
+}
+
+//MARK: - UITableViewDelegate
+extension AddRecipeViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if tableView.tag == 1 {
+            guard let slidingCell = cell as? IngredientCell else { return }
+            slidingCell.animate()
+        }
     }
 }
