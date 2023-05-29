@@ -29,11 +29,11 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var menuButton: UIButton!
+    
     var id: String?
     
     var ingredients = [Ingredient]()
-    
-    var recipeOld: RecipeOld?
     
     var recipe: Recipe?
     
@@ -45,6 +45,7 @@ class RecipeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        menuButton.isHidden = true
         UIApplication.shared.isIdleTimerDisabled = true
         
         tableView.dataSource = self
@@ -57,7 +58,6 @@ class RecipeViewController: UIViewController {
                     Task {
                         if let image = safeRecipe.thumbnail {
                             if let thumbnailGuid = image.originalPhotoGuid {
-                                thumbnail.image = UIImage(systemName: "bookmark.slash.fill")
                                 let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnailGuid + "." + (safeRecipe.thumbnail?.extension)!)
                                 if let safeData = imageData {
                                     thumbnailLoadingIndicator.stopAnimating()
@@ -76,7 +76,6 @@ class RecipeViewController: UIViewController {
                             thumbnail.image = UIImage(systemName: "photo")
                         }
                     }
-                    
                     if let safeIngredients = safeRecipe.ingredients, !safeIngredients.isEmpty {
                         ingredients = safeIngredients
                         tableView.reloadData()
@@ -95,6 +94,10 @@ class RecipeViewController: UIViewController {
                         savedButton.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)
                     }else{
                         savedButton.setImage(UIImage(systemName: "bookmark.fill"), for:.normal)
+                    }
+                    
+                    if recipe?.createdById != nil && !recipe!.createdById.isEmpty && recipe!.createdById == GlobalUser.shared.id {
+                        menuButton.isHidden = false
                     }
                 }
             }
@@ -116,19 +119,12 @@ class RecipeViewController: UIViewController {
         case "showAddRecipe":
             let view = segue.destination as! AddRecipeViewController
             view.isUpdate = true
-            view.viewDidLoad()
             if let id = recipe?.id {
                 view.recipeId = id
             }
-            view.name.text = recipeOld?.name
-//            view.thumbnailLink.text = recipeOld?.thumbnail
-//            view.setImage()
-//            view.ingredients.text = recipeOld?.ingredients
-//            view.text.text = recipeOld?.text
-//            if let categoryId = recipeOld?.category.id {
-//                view.selectedCategoryId = categoryId
-//            }
-//            view.selectedCategoryText.text = recipeOld?.category.name
+            view.viewDidLoad()
+            view.render()
+            
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
             view.setPage(pageNumber: 1)
@@ -181,6 +177,48 @@ class RecipeViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func menuButtonTapped(_ sender: Any) {
+        showMenuOptions()
+    }
+    
+    func showMenuOptions() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let editAction = UIAlertAction(title: "Edit Recipe", style: .default) { _ in
+            self.performSegue(withIdentifier: "showAddRecipe", sender: nil)
+        }
+        alertController.addAction(editAction)
+
+        let deleteAction = UIAlertAction(title: "Delete Recipe", style: .destructive) { _ in
+            let confirmationAlert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this recipe?", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "Yes", style: .destructive) { _ in
+                Task {
+                    if let recipeId = self.id {
+                        await self.recipesService.deleteRecipe(recipeId)
+                        self.performSegue(withIdentifier: "unwindToRecipes", sender: nil)
+                    }
+                }
+            }
+            let cancelAction = UIAlertAction(title: "No", style: .cancel) { _ in }
+            
+            confirmationAlert.addAction(okAction)
+            confirmationAlert.addAction(cancelAction)
+            self.present(confirmationAlert, animated: true, completion: nil)
+        }
+        alertController.addAction(deleteAction)
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
+        
     }
 }
 

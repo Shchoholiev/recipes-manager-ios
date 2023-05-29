@@ -200,104 +200,7 @@ class RecipesService: ServiceBase {
     func createRecipe(_ recipe: RecipeCreateDto) async -> Recipe? {
         do {
             let boundary = UUID().uuidString
-            var formData = Data()
-            
-            if let thumbnailData = recipe.thumbnail {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append("Content-Disposition: form-data; name=\"thumbnail\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-                formData.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
-                formData.append(thumbnailData)
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            formData.append(Data("--\(boundary)\r\n".utf8))
-            formData.append(Data("Content-Disposition: form-data; name=\"name\"\r\n\r\n".utf8))
-            formData.append(Data(recipe.name.utf8))
-            formData.append(Data("\r\n".utf8))
-            
-            if let text = recipe.text {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"text\"\r\n\r\n".utf8))
-                formData.append(Data(text.utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            if let ingredients = recipe.ingredients, !ingredients.isEmpty {
-                for (index, ingredient) in ingredients.enumerated() {
-                    formData.append(Data("--\(boundary)\r\n".utf8))
-                    formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].name\"\r\n\r\n".utf8))
-                    formData.append(Data(ingredient.name.utf8))
-                    formData.append(Data("\r\n".utf8))
-                    
-                    if let units = ingredient.units {
-                        formData.append(Data("--\(boundary)\r\n".utf8))
-                        formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].units\"\r\n\r\n".utf8))
-                        formData.append(Data(units.utf8))
-                        formData.append(Data("\r\n".utf8))
-                    }
-                    
-                    if let amount = ingredient.amount {
-                        formData.append(Data("--\(boundary)\r\n".utf8))
-                        formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].amount\"\r\n\r\n".utf8))
-                        formData.append(Data("\(amount)".utf8))
-                        formData.append(Data("\r\n".utf8))
-                    }
-                    
-                    if let totalCalories = ingredient.totalCalories {
-                        formData.append(Data("--\(boundary)\r\n".utf8))
-                        formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].totalCalories\"\r\n\r\n".utf8))
-                        formData.append(Data("\(totalCalories)".utf8))
-                        formData.append(Data("\r\n".utf8))
-                    }
-                }
-            }
-            
-            if let ingredientsText = recipe.ingredientsText {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"ingredientsText\"\r\n\r\n".utf8))
-                formData.append(Data(ingredientsText.utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            for (index, category) in recipe.categories.enumerated() {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"categories[\(index)].id\"\r\n\r\n".utf8))
-                formData.append(Data(category.id.utf8))
-                formData.append(Data("\r\n".utf8))
-                
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"categories[\(index)].name\"\r\n\r\n".utf8))
-                formData.append(Data(category.name.utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            if let calories = recipe.calories {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"calories\"\r\n\r\n".utf8))
-                formData.append(Data("\(calories)".utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            if let servingsCount = recipe.servingsCount {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"servingsCount\"\r\n\r\n".utf8))
-                formData.append(Data("\(servingsCount)".utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            if let minutesToCook = recipe.minutesToCook {
-                formData.append(Data("--\(boundary)\r\n".utf8))
-                formData.append(Data("Content-Disposition: form-data; name=\"minutesToCook\"\r\n\r\n".utf8))
-                formData.append(Data("\(minutesToCook)".utf8))
-                formData.append(Data("\r\n".utf8))
-            }
-            
-            formData.append(Data("--\(boundary)\r\n".utf8))
-            formData.append(Data("Content-Disposition: form-data; name=\"isPublic\"\r\n\r\n".utf8))
-            formData.append(Data("\(recipe.isPublic)".utf8))
-            formData.append(Data("\r\n".utf8))
-            
-            formData.append(Data("--\(boundary)--\r\n".utf8))
+            let formData = encodeRecipeAsFormData(recipe, boundary: boundary)
             
             let result: Recipe = try await HttpClient.shared.postAsync("recipes", formData, "multipart/form-data; boundary=\(boundary)")
             
@@ -308,7 +211,125 @@ class RecipesService: ServiceBase {
         
         return nil
     }
-
+    
+    
+    func updateRecipe(_ id: String, _ recipe: RecipeCreateDto) async -> Recipe? {
+        do {
+            let boundary = UUID().uuidString
+            let formData = encodeRecipeAsFormData(recipe, boundary: boundary)
+            
+            let result: Recipe = try await HttpClient.shared.putAsync("recipes/\(id)", formData, "multipart/form-data; boundary=\(boundary)")
+            
+            return result
+        } catch {
+            print(error)
+        }
+        
+        return nil
+    }
+    
+    func encodeRecipeAsFormData(_ recipe: RecipeCreateDto, boundary: String) -> Data {
+        var formData = Data()
+        
+        if let thumbnailData = recipe.thumbnail {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append("Content-Disposition: form-data; name=\"thumbnail\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+            formData.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            formData.append(thumbnailData)
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        formData.append(Data("--\(boundary)\r\n".utf8))
+        formData.append(Data("Content-Disposition: form-data; name=\"name\"\r\n\r\n".utf8))
+        formData.append(Data(recipe.name.utf8))
+        formData.append(Data("\r\n".utf8))
+        
+        if let text = recipe.text {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"text\"\r\n\r\n".utf8))
+            formData.append(Data(text.utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        if let ingredients = recipe.ingredients, !ingredients.isEmpty {
+            for (index, ingredient) in ingredients.enumerated() {
+                formData.append(Data("--\(boundary)\r\n".utf8))
+                formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].name\"\r\n\r\n".utf8))
+                formData.append(Data(ingredient.name.utf8))
+                formData.append(Data("\r\n".utf8))
+                
+                if let units = ingredient.units {
+                    formData.append(Data("--\(boundary)\r\n".utf8))
+                    formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].units\"\r\n\r\n".utf8))
+                    formData.append(Data(units.utf8))
+                    formData.append(Data("\r\n".utf8))
+                }
+                
+                if let amount = ingredient.amount {
+                    formData.append(Data("--\(boundary)\r\n".utf8))
+                    formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].amount\"\r\n\r\n".utf8))
+                    formData.append(Data("\(amount)".utf8))
+                    formData.append(Data("\r\n".utf8))
+                }
+                
+                if let totalCalories = ingredient.totalCalories {
+                    formData.append(Data("--\(boundary)\r\n".utf8))
+                    formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].totalCalories\"\r\n\r\n".utf8))
+                    formData.append(Data("\(totalCalories)".utf8))
+                    formData.append(Data("\r\n".utf8))
+                }
+            }
+        }
+        
+        if let ingredientsText = recipe.ingredientsText {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"ingredientsText\"\r\n\r\n".utf8))
+            formData.append(Data(ingredientsText.utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        for (index, category) in recipe.categories.enumerated() {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"categories[\(index)].id\"\r\n\r\n".utf8))
+            formData.append(Data(category.id.utf8))
+            formData.append(Data("\r\n".utf8))
+            
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"categories[\(index)].name\"\r\n\r\n".utf8))
+            formData.append(Data(category.name.utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        if let calories = recipe.calories {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"calories\"\r\n\r\n".utf8))
+            formData.append(Data("\(calories)".utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        if let servingsCount = recipe.servingsCount {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"servingsCount\"\r\n\r\n".utf8))
+            formData.append(Data("\(servingsCount)".utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        if let minutesToCook = recipe.minutesToCook {
+            formData.append(Data("--\(boundary)\r\n".utf8))
+            formData.append(Data("Content-Disposition: form-data; name=\"minutesToCook\"\r\n\r\n".utf8))
+            formData.append(Data("\(minutesToCook)".utf8))
+            formData.append(Data("\r\n".utf8))
+        }
+        
+        formData.append(Data("--\(boundary)\r\n".utf8))
+        formData.append(Data("Content-Disposition: form-data; name=\"isPublic\"\r\n\r\n".utf8))
+        formData.append(Data("\(recipe.isPublic)".utf8))
+        formData.append(Data("\r\n".utf8))
+        
+        formData.append(Data("--\(boundary)--\r\n".utf8))
+        
+        return formData
+    }
     
     func uploadImage(imageData: Data?, blobContainer: String) async -> String? {
         let url = URL(string: "https://shch-recipes-api.azurewebsites.net/api/cloud-storage/upload/\(blobContainer)")
@@ -363,6 +384,24 @@ class RecipesService: ServiceBase {
 //        
 //        return false
 //    }
+    
+    func deleteRecipe(_ id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+               mutation DeleteRecipe($deleteRecipeId: String!) {
+                 deleteRecipe(id: $deleteRecipeId) {
+                   isSuccessful
+                 }
+               }
+            """,
+            variables: [
+                "deleteRecipeId": id
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        
+        return response.errors == nil
+    }
     
     func deleteAsync(id: Int) async -> Bool {
         let url = URL(string: "\(baseUrl)/\(id)")

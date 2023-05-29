@@ -233,15 +233,32 @@
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="j0v-yN-lu3">
                                                 <rect key="frame" x="204" y="92.666666666666657" width="20" height="20"/>
                                             </activityIndicatorView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmU-xe-oyA">
+                                                <rect key="frame" x="358" y="10" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="6f4-Dx-bum"/>
+                                                    <constraint firstAttribute="width" constant="50" id="dKO-9e-qms"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule">
+                                                    <imageReference key="image" image="ellipsis" catalog="system" symbolScale="large"/>
+                                                    <color key="baseBackgroundColor" name="AccentColor"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="menuButtonTapped:" destination="5dq-FP-U3E" eventType="touchUpInside" id="Hln-dR-P8b"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="BSZ-zf-auO" secondAttribute="trailing" constant="20" id="Bin-RN-rIb"/>
                                             <constraint firstAttribute="bottom" secondItem="OZD-95-Rwp" secondAttribute="bottom" constant="15" id="DVy-Xw-kYy"/>
+                                            <constraint firstItem="BSZ-zf-auO" firstAttribute="top" secondItem="wmU-xe-oyA" secondAttribute="bottom" constant="15" id="IKd-aK-75c"/>
                                             <constraint firstAttribute="trailing" secondItem="ras-pa-rEN" secondAttribute="trailing" id="Iv0-J9-38I"/>
                                             <constraint firstItem="j0v-yN-lu3" firstAttribute="centerX" secondItem="3Co-ec-rkk" secondAttribute="centerX" id="JUW-6g-btO"/>
                                             <constraint firstItem="ras-pa-rEN" firstAttribute="leading" secondItem="3Co-ec-rkk" secondAttribute="leading" id="MwK-cU-Ym4"/>
                                             <constraint firstItem="OZD-95-Rwp" firstAttribute="top" secondItem="BSZ-zf-auO" secondAttribute="bottom" constant="15" id="Pga-gK-0BN"/>
+                                            <constraint firstAttribute="trailing" secondItem="wmU-xe-oyA" secondAttribute="trailing" constant="20" id="QH6-nB-OTM"/>
                                             <constraint firstItem="j0v-yN-lu3" firstAttribute="centerY" secondItem="3Co-ec-rkk" secondAttribute="centerY" id="bN9-xP-YK5"/>
                                             <constraint firstAttribute="trailing" secondItem="OZD-95-Rwp" secondAttribute="trailing" constant="20" id="g6i-cA-boX"/>
                                             <constraint firstAttribute="bottom" secondItem="ras-pa-rEN" secondAttribute="bottom" id="sRY-ao-JOR"/>
@@ -391,6 +408,7 @@
                         <outlet property="contentLabel" destination="r4W-A0-op6" id="6z9-lV-t7R"/>
                         <outlet property="contentTypeBar" destination="Xfb-Ab-qyZ" id="Uwe-gb-3VL"/>
                         <outlet property="infoLabel" destination="QTv-UE-s8M" id="Mll-dT-3Xa"/>
+                        <outlet property="menuButton" destination="wmU-xe-oyA" id="pil-kY-gML"/>
                         <outlet property="recipeName" destination="E8l-ai-Gkn" id="g8s-en-reW"/>
                         <outlet property="savedButton" destination="OZD-95-Rwp" id="lRe-ME-dnH"/>
                         <outlet property="scrollView" destination="KMA-hc-XPc" id="zk9-TB-M34"/>
@@ -404,18 +422,18 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Ps-7y-Ihk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="LD5-zG-Q31" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1538" y="1235"/>
+            <point key="canvasLocation" x="-1539" y="1282"/>
         </scene>
         <!--Add Recipe-->
         <scene sceneID="RCh-Yt-tnI">
             <objects>
                 <viewController title="Add Recipe" id="dHd-Xc-QoH" customClass="AddRecipeViewController" customModule="Recipes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WpE-e7-MF0">
-                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="869"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="x2A-aP-cUz">
-                                <rect key="frame" x="0.0" y="62" width="428" height="781"/>
+                                <rect key="frame" x="0.0" y="15" width="428" height="805"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AdE-Q4-Jv5">
                                         <rect key="frame" x="0.0" y="0.0" width="428" height="30"/>
@@ -442,10 +460,10 @@
                                         </constraints>
                                     </view>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gk1-T8-guG">
-                                        <rect key="frame" x="0.0" y="50" width="428" height="731"/>
+                                        <rect key="frame" x="0.0" y="50" width="428" height="755"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hVc-XJ-kRc">
-                                                <rect key="frame" x="15" y="0.0" width="398" height="1201"/>
+                                                <rect key="frame" x="15" y="0.0" width="398" height="1225"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="iCL-6D-enh" userLabel="Name Stack View">
                                                         <rect key="frame" x="0.0" y="0.0" width="398" height="61.333333333333336"/>
@@ -457,7 +475,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eaJ-0E-5mU">
-                                                                <rect key="frame" x="0.0" y="27.333333333333343" width="398" height="34"/>
+                                                                <rect key="frame" x="0.0" y="27.333333333333329" width="398" height="34"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits"/>
@@ -813,6 +831,7 @@
                         <segue destination="6Eu-Wb-eeU" kind="show" identifier="showCategories" id="Zmi-u7-SaW"/>
                         <segue destination="Lnv-86-eqt" kind="unwind" identifier="unwindToRecipe" unwindAction="unwindToRecipe:" id="AwT-Ee-Pvs"/>
                         <segue destination="5dq-FP-U3E" kind="show" identifier="showRecipe" id="Y9c-ah-NOd"/>
+                        <segue destination="Lnv-86-eqt" kind="unwind" unwindAction="unwindToRecipe:" id="hFA-3H-61X"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3tB-Wu-zOx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1286,12 +1305,13 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Gm8-Th-6XD"/>
+        <segue reference="HdQ-vE-8xd"/>
         <segue reference="Y9c-ah-NOd"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="book.closed.fill" catalog="system" width="115" height="128"/>
         <image name="bookmark.fill" catalog="system" width="110" height="128"/>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="list.bullet.rectangle.fill" catalog="system" width="128" height="93"/>
         <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
         <image name="person.fill" catalog="system" width="128" height="120"/>
