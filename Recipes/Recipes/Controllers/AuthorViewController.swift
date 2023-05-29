@@ -1,15 +1,16 @@
 //
-//  ProfileViewController.swift
+//  AuthorViewController.swift
 //  Recipes
 //
-//  Created by Serhii Shchoholiev on 5/28/23.
+//  Created by Виталий Красноруцкий on 30.05.23.
 //
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class AuthorViewController: UIViewController {
+
     
-    @IBOutlet weak var nameTextField: UITextField!
+    @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var phoneTextField: UITextField!
     
@@ -33,7 +34,9 @@ class ProfileViewController: UIViewController {
     
     var chosenId: String?
     
-    var searchType: RecipesSearchTypes = .PERSONAL
+    var userId: String?
+    
+    var searchType: RecipesSearchTypes = .PUBLIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,27 +44,26 @@ class ProfileViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
         
-        nameTextField.isEnabled = false
         phoneTextField.isEnabled = false
         emailTextField.isEnabled = false
         Task{
             let user = await self.usersServise.getCurrentUserAsync()
             if let safeUser = user{
-                nameTextField.placeholder = safeUser.name
+                nameLabel.text = safeUser.name
                 phoneTextField.placeholder = safeUser.phone
                 emailTextField.placeholder = safeUser.email
+                userId = safeUser.id
             }
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        nameTextField.text = GlobalUser.shared.name
         setPage(pageNumber: 1)
     }
     
     func setPage(pageNumber: Int) {
         Task {
-            if let safeId = GlobalUser.shared.id{
+            if let safeId = userId{
                 let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: "", authorId: safeId)
                 if let safePage = recipesPage {
                     recipes = safePage.items
@@ -80,7 +82,7 @@ class ProfileViewController: UIViewController {
     
     func addPage(pageNumber: Int) {
         Task {
-            if let safeId = GlobalUser.shared.id{
+            if let safeId = userId{
                 let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: "", authorId: safeId)
                 if let safePage = recipesPage {
                     recipes.append(contentsOf: safePage.items)
@@ -95,7 +97,7 @@ class ProfileViewController: UIViewController {
 
 
 //MARK: - UITableViewDataSource
-extension ProfileViewController: UITableViewDataSource {
+extension AuthorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return recipes.count
@@ -148,7 +150,7 @@ extension ProfileViewController: UITableViewDataSource {
 
 
 //MARK: - UITableViewDelegate
-extension ProfileViewController: UITableViewDelegate {
+extension AuthorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == recipes.count - 3 {
             if currentPage < totalPages {
@@ -160,7 +162,7 @@ extension ProfileViewController: UITableViewDelegate {
 }
 
 //MARK: - ProfileCellDelegate
-extension ProfileViewController: RecipeCellDelegate {
+extension AuthorViewController: RecipeCellDelegate {
     func recipeCellDidTap(_ cell: RecipeCell) {
         showRecipe(cell.recipeId)
     }

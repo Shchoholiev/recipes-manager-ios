@@ -424,6 +424,102 @@
             </objects>
             <point key="canvasLocation" x="-1539" y="1282"/>
         </scene>
+        <!--Author View Controller-->
+        <scene sceneID="VzQ-jb-2zi">
+            <objects>
+                <viewController id="bWX-fr-eK0" customClass="AuthorViewController" customModule="Recipes" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2uo-pg-A4x">
+                        <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2x5-fB-sQs">
+                                <rect key="frame" x="20" y="67" width="388" height="825"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="HDk-Tt-uFj" userLabel="Email Stack View">
+                                        <rect key="frame" x="0.0" y="0.0" width="388" height="825"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dE8-gi-5cS">
+                                                <rect key="frame" x="0.0" y="0.0" width="388" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yA0-fA-M4N">
+                                                <rect key="frame" x="0.0" y="37" width="388" height="20.333333333333329"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="23N-Xs-sCe">
+                                                <rect key="frame" x="0.0" y="64.333333333333343" width="388" height="34"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="73J-we-vIo"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Phone" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kd2-1K-hVR">
+                                                <rect key="frame" x="0.0" y="105.33333333333334" width="388" height="20.333333333333329"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JKc-Si-x47">
+                                                <rect key="frame" x="0.0" y="132.66666666666666" width="388" height="34"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="hLs-Hp-idw"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IpT-78-e2b">
+                                                <rect key="frame" x="0.0" y="173.66666666666666" width="388" height="34"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="34" id="oLJ-za-Ngc"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Subscribe">
+                                                    <color key="baseBackgroundColor" name="AccentColor"/>
+                                                </buttonConfiguration>
+                                            </button>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="x71-ic-11I">
+                                                <rect key="frame" x="0.0" y="214.66666666666669" width="388" height="610.33333333333326"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            </tableView>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="HDk-Tt-uFj" firstAttribute="leading" secondItem="2x5-fB-sQs" secondAttribute="leading" id="0GL-xd-dHZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="HDk-Tt-uFj" secondAttribute="bottom" id="G76-dM-dov"/>
+                                    <constraint firstAttribute="trailing" secondItem="HDk-Tt-uFj" secondAttribute="trailing" id="o7u-nh-4wd"/>
+                                    <constraint firstItem="HDk-Tt-uFj" firstAttribute="top" secondItem="2x5-fB-sQs" secondAttribute="top" id="qf7-Fi-fGD"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Rlh-h1-WeQ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="2x5-fB-sQs" firstAttribute="leading" secondItem="Rlh-h1-WeQ" secondAttribute="leading" constant="20" id="6gu-9l-uJk"/>
+                            <constraint firstItem="Rlh-h1-WeQ" firstAttribute="bottom" secondItem="2x5-fB-sQs" secondAttribute="bottom" id="F17-te-z5u"/>
+                            <constraint firstItem="Rlh-h1-WeQ" firstAttribute="trailing" secondItem="2x5-fB-sQs" secondAttribute="trailing" constant="20" id="HdM-Jg-UVw"/>
+                            <constraint firstItem="2x5-fB-sQs" firstAttribute="top" secondItem="Rlh-h1-WeQ" secondAttribute="top" constant="20" id="Oyl-o9-dvi"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="emailTextField" destination="23N-Xs-sCe" id="LiP-Dt-GUQ"/>
+                        <outlet property="nameLabel" destination="dE8-gi-5cS" id="yhk-Zt-Fjo"/>
+                        <outlet property="phoneTextField" destination="JKc-Si-x47" id="HBE-y7-vrQ"/>
+                        <outlet property="tableView" destination="x71-ic-11I" id="QeM-Yw-xuf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kyq-Ar-gzA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1521" y="2046"/>
+        </scene>
         <!--Add Recipe-->
         <scene sceneID="RCh-Yt-tnI">
             <objects>
