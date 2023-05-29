@@ -213,12 +213,12 @@ class RecipesService: ServiceBase {
     }
     
     
-    func updateRecipe(_ recipe: RecipeCreateDto) async -> Recipe? {
+    func updateRecipe(_ id: String, _ recipe: RecipeCreateDto) async -> Recipe? {
         do {
             let boundary = UUID().uuidString
             let formData = encodeRecipeAsFormData(recipe, boundary: boundary)
             
-            let result: Recipe = try await HttpClient.shared.putAsync("recipes", formData, "multipart/form-data; boundary=\(boundary)")
+            let result: Recipe = try await HttpClient.shared.putAsync("recipes/\(id)", formData, "multipart/form-data; boundary=\(boundary)")
             
             return result
         } catch {
@@ -385,17 +385,17 @@ class RecipesService: ServiceBase {
 //        return false
 //    }
     
-    func deleteRecipe(id: String) async -> Bool{
+    func deleteRecipe(_ id: String) async -> Bool{
         let request = GraphQlRequest(
             query: """
-               mutation DeleteRecipe($recipeId: String!) {
-                 deleteRecipe(recipeId: $recipeId) {
+               mutation DeleteRecipe($deleteRecipeId: String!) {
+                 deleteRecipe(id: $deleteRecipeId) {
                    isSuccessful
                  }
                }
             """,
             variables: [
-                "recipeId": id
+                "deleteRecipeId": id
             ]
         )
         let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)

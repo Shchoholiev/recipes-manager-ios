@@ -74,12 +74,6 @@ class AddRecipeViewController: UIViewController {
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
         
-        if isUpdate {
-            createButton.setTitle("Update recipe", for: .normal)
-        } else {
-            createButton.setTitle("Create recipe", for: .normal)
-        }
-        
         thumbnail.layer.borderWidth = 1
         thumbnail.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
         thumbnail.layer.cornerRadius = 10
@@ -92,19 +86,6 @@ class AddRecipeViewController: UIViewController {
         imagePickerView.delegate = self
         
         contentStackView.isHidden = true
-        showText = ingredients.isEmpty
-        switchIngredientsView(showText)
-        
-//        if recipe?.ingredientsText == nil{
-//            parseIngredientsButton.isEnabled = false
-//            if showText {
-//                showTextButton.isEnabled = false
-//            }
-//        }
-//        
-//        if ingredients.isEmpty && !showText {
-//            showTextButton.isEnabled = false
-//        }
         
         ingredientsText.layer.borderWidth = 1
         ingredientsText.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
@@ -123,11 +104,76 @@ class AddRecipeViewController: UIViewController {
         categoriesTableView.dataSource = self
         categoriesTableView.register(UINib(nibName: "CategoryChooseCell", bundle: nil), forCellReuseIdentifier: "CategoryChooseCell")
         categoriesTableView.register(UINib(nibName: "ButtonCell", bundle: nil), forCellReuseIdentifier: "ButtonCell")
-        
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 //        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func render() {
+        if isUpdate {
+            createButton.setTitle("Update recipe", for: .normal)
+        } else {
+            createButton.setTitle("Create recipe", for: .normal)
+        }
         
-        ingredientsText.text = "Flour 1 cup Wheat flour 1/4 cup Baking powder 2 teaspoon Salt a pinch Sugar 2 tablespoons Oil 2 tablespoons Water 1 1/4 cup Vanilla 2 teaspoons"
+        if !recipeId.isEmpty {
+            Task {
+                recipe = await recipesService.getRecipeAsync(id: recipeId)
+                if let safeRecipe = recipe {
+                    ingredients = safeRecipe.ingredients ?? []
+                    categories = safeRecipe.categories
+                    ingredientsTableView.reloadData()
+                    categoriesTableView.reloadData()
+                    
+                    showText = ingredients.isEmpty
+                    switchIngredientsView(showText)
+                    
+                    name.text = safeRecipe.name
+                    ingredientsText.text = safeRecipe.ingredientsText
+                    content.text = safeRecipe.text
+                    if let safeCalories = safeRecipe.calories {
+                        calories.text = String(safeCalories)
+                    }
+                    if let safeServings = safeRecipe.servingsCount {
+                        servings.text = String(safeServings)
+                    }
+                    if let safeCookingTime = safeRecipe.minutesToCook {
+                        cookingTime.text = String(safeCookingTime)
+                    }
+                    isPublicSwitch.isOn = safeRecipe.isPublic ?? false
+                    
+                    Task {
+                        if let image = safeRecipe.thumbnail {
+                            if let thumbnailGuid = image.originalPhotoGuid {
+                                let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnailGuid + "." + (safeRecipe.thumbnail?.extension)!)
+                                if let safeData = imageData {
+                                    thumbnail.contentMode = .scaleAspectFill
+                                    thumbnail.image = UIImage(data: safeData)
+                                } else {
+                                    thumbnail.contentMode = .center
+                                    thumbnail.image = UIImage(systemName: "photo")
+                                }
+                            } else {
+                               
+                            }
+                        } else {
+                            thumbnail.contentMode = .center
+                            thumbnail.image = UIImage(systemName: "photo")
+                        }
+                    }
+                    
+            //        if recipe?.ingredientsText == nil{
+            //            parseIngredientsButton.isEnabled = false
+            //            if showText {
+            //                showTextButton.isEnabled = false
+            //            }
+            //        }
+            //
+            //        if ingredients.isEmpty && !showText {
+            //            showTextButton.isEnabled = false
+            //        }
+                }
+            }
+        }
     }
     
     @IBOutlet weak var contentHeight: NSLayoutConstraint!
@@ -293,7 +339,7 @@ class AddRecipeViewController: UIViewController {
             }
         }
         var servingsCount: Int? = nil
-        if let servingsString = self.calories?.text, !servingsString.isEmpty {
+        if let servingsString = self.servings?.text, !servingsString.isEmpty {
             if let servingsInt = Int(servingsString) {
                 servingsCount = servingsInt
             } else {
@@ -326,8 +372,10 @@ class AddRecipeViewController: UIViewController {
             
             var succeded = false
             if isUpdate {
-//                succeded = await recipesService.updateRecipe(recipe)
-                if succeded {
+                let result = await recipesService.updateRecipe(recipeId, recipe)
+                if result != nil {
+                    succeded = true
+                    reset()
                     self.performSegue(withIdentifier: "unwindToRecipe", sender: nil)
                 }
             } else {
@@ -374,18 +422,6 @@ class AddRecipeViewController: UIViewController {
         }
     }
     
-//    func setImage() {
-//        if let imageLink = thumbnailLink.text {
-//            Task {
-//                let image = await helpersService.downloadImage(from: imageLink)
-//                if let imageData = image {
-//                    thumbnail.image = UIImage(data: imageData)
-//                    thumbnail.contentMode = .scaleAspectFill
-//                }
-//            }
-//        }
-//    }
-    
     func reset() {
         name.text = ""
 //        thumbnailLink.text = ""
@@ -431,12 +467,8 @@ class AddRecipeViewController: UIViewController {
             view.id = recipeId
         case "unwindToRecipe":
             let view = segue.destination as! RecipeViewController
-            Task {
-                if let recipe = await recipesService.getRecipeAsync(id: recipeId) {
-//                    view.recipeOld = recipe
-                    view.viewDidLoad()
-                }
-            }
+            view.id = recipeId
+            view.viewDidLoad()
         default:
             break
         }

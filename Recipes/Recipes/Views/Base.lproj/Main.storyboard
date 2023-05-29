@@ -417,7 +417,6 @@
                         <outlet property="thumbnailLoadingIndicator" destination="j0v-yN-lu3" id="bP7-ZW-NnL"/>
                         <segue destination="LD5-zG-Q31" kind="unwind" identifier="unwindToRecipes" unwindAction="unwindToRecipes:" id="El7-Xy-A18"/>
                         <segue destination="dHd-Xc-QoH" kind="show" identifier="showAddRecipe" id="HdQ-vE-8xd"/>
-                        <segue destination="dHd-Xc-QoH" kind="show" identifier="showEditRecipe" id="ugK-72-zoJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Ps-7y-Ihk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -832,6 +831,7 @@
                         <segue destination="6Eu-Wb-eeU" kind="show" identifier="showCategories" id="Zmi-u7-SaW"/>
                         <segue destination="Lnv-86-eqt" kind="unwind" identifier="unwindToRecipe" unwindAction="unwindToRecipe:" id="AwT-Ee-Pvs"/>
                         <segue destination="5dq-FP-U3E" kind="show" identifier="showRecipe" id="Y9c-ah-NOd"/>
+                        <segue destination="Lnv-86-eqt" kind="unwind" unwindAction="unwindToRecipe:" id="hFA-3H-61X"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3tB-Wu-zOx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1305,7 +1305,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ugK-72-zoJ"/>
+        <segue reference="HdQ-vE-8xd"/>
         <segue reference="Y9c-ah-NOd"/>
     </inferredMetricsTieBreakers>
     <resources>

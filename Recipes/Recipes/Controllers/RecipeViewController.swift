@@ -35,8 +35,6 @@ class RecipeViewController: UIViewController {
     
     var ingredients = [Ingredient]()
     
-    var recipeOld: RecipeOld?
-    
     var recipe: Recipe?
     
     let helpersService = HelpersService()
@@ -60,7 +58,6 @@ class RecipeViewController: UIViewController {
                     Task {
                         if let image = safeRecipe.thumbnail {
                             if let thumbnailGuid = image.originalPhotoGuid {
-                                thumbnail.image = UIImage(systemName: "bookmark.slash.fill")
                                 let imageData = await helpersService.downloadImage(from: "https://l7l2.c16.e2-2.dev/recipes/" + thumbnailGuid + "." + (safeRecipe.thumbnail?.extension)!)
                                 if let safeData = imageData {
                                     thumbnailLoadingIndicator.stopAnimating()
@@ -122,19 +119,12 @@ class RecipeViewController: UIViewController {
         case "showAddRecipe":
             let view = segue.destination as! AddRecipeViewController
             view.isUpdate = true
-            view.viewDidLoad()
             if let id = recipe?.id {
                 view.recipeId = id
             }
-            view.name.text = recipeOld?.name
-//            view.thumbnailLink.text = recipeOld?.thumbnail
-//            view.setImage()
-//            view.ingredients.text = recipeOld?.ingredients
-//            view.text.text = recipeOld?.text
-//            if let categoryId = recipeOld?.category.id {
-//                view.selectedCategoryId = categoryId
-//            }
-//            view.selectedCategoryText.text = recipeOld?.category.name
+            view.viewDidLoad()
+            view.render()
+            
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
             view.setPage(pageNumber: 1)
@@ -197,20 +187,22 @@ class RecipeViewController: UIViewController {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
         let editAction = UIAlertAction(title: "Edit Recipe", style: .default) { _ in
-            print("Option 1 selected")
+            self.performSegue(withIdentifier: "showAddRecipe", sender: nil)
         }
         alertController.addAction(editAction)
 
         let deleteAction = UIAlertAction(title: "Delete Recipe", style: .destructive) { _ in
-            print("Option 2 selected")
             let confirmationAlert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this recipe?", preferredStyle: .alert)
             
             let okAction = UIAlertAction(title: "Yes", style: .destructive) { _ in
-                print("OK selected")
+                Task {
+                    if let recipeId = self.id {
+                        await self.recipesService.deleteRecipe(recipeId)
+                        self.performSegue(withIdentifier: "unwindToRecipes", sender: nil)
+                    }
+                }
             }
-            let cancelAction = UIAlertAction(title: "No", style: .cancel) { _ in
-                print("Cancel selected")
-            }
+            let cancelAction = UIAlertAction(title: "No", style: .cancel) { _ in }
             
             confirmationAlert.addAction(okAction)
             confirmationAlert.addAction(cancelAction)
@@ -223,6 +215,10 @@ class RecipeViewController: UIViewController {
         alertController.addAction(cancelAction)
 
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func unwindToRecipe( _ seg: UIStoryboardSegue) {
+        
     }
 }
 
