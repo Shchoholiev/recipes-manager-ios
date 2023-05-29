@@ -23,6 +23,8 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginButton: UIButton!
     
+    let authService = AuthSerice()
+    
     override func viewDidLoad() {
         loginButton.isEnabled = false
         email.delegate = self
@@ -33,7 +35,7 @@ class LoginViewController: UIViewController {
     @IBAction func loginButtonTapped(_ sender: UIButton) {
         sender.isEnabled = false
         
-        if (email.text == nil || email.text!.isEmpty) || (phone.text == nil || phone.text!.isEmpty) {
+        if (email.text == nil || email.text!.isEmpty) && (phone.text == nil || phone.text!.isEmpty) {
             showAlert(title: "Missing data", message: "Please enter phone or email")
             return
         }
@@ -43,10 +45,22 @@ class LoginViewController: UIViewController {
         }
         
         Task {
-            
-            reset()
-            sender.isEnabled = true
+            let user = LoginModel(email: email.text, phone: phone.text, password: password)
+            let isSuccessful = await authService.login(user)
+            if isSuccessful {
+                dismiss(animated: true, completion: nil)
+                reset()
+                sender.isEnabled = true
+            } else {
+                showAlert(title: "Unsuccessful login", message: "Please review the data you provided")
+            }
         }
+    }
+    
+    @IBAction func loginAsGuestTapped(_ sender: UIButton) {
+        authService.loginAsGuest()
+        dismiss(animated: true, completion: nil)
+        reset()
     }
     
     func isValidEmail(email: String) -> Bool {
@@ -99,6 +113,9 @@ class LoginViewController: UIViewController {
         email.text = nil
         phone.text = nil
         password.text = nil
+        emailLabel.text = "Email"
+        phoneLabel.text = "Phone"
+        passwordLabel.text = "Password"
     }
 }
 
