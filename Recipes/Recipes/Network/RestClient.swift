@@ -29,11 +29,6 @@ class RestClient {
         return try await sendAsync(path, data, .put)
     }
     
-    private enum HttpMethod: String {
-        case get = "GET"
-        case post = "POST"
-        case put = "PUT"
-    }
     
     private func sendAsync<TIn: Encodable, TOut: Decodable>(_ path: String, _ data: TIn, _ httpMethod: HttpMethod) async throws -> TOut {
         do {
@@ -85,4 +80,10 @@ class RestClient {
             throw error
         }
     }
+}
+
+enum HttpMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
 }

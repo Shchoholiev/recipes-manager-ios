@@ -195,13 +195,8 @@ extension RecipeViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientCell", for: indexPath) as! IngredientCell
         
         let entity = ingredients[indexPath.row]
-        cell.ingredientName?.text = entity.name
-        
-        let numberFormatter = NumberFormatter()
-        numberFormatter.minimumFractionDigits = 0
-        numberFormatter.maximumFractionDigits = entity.amount.truncatingRemainder(dividingBy: 1) == 0 ? 0 : 1
-        let stringAmount = numberFormatter.string(from: NSNumber(value: entity.amount)) ?? ""
-        cell.ingredientAmount?.text = stringAmount + " " + (entity.units ?? "")
+        cell.ingredient = entity
+        cell.render()
         
         return cell
     }

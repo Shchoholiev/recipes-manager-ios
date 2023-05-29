@@ -134,6 +134,7 @@ class RecipesService: ServiceBase {
                    ingredients {
                      name
                      units
+                     totalCalories
                      amount
                    }
                    createdById
@@ -235,10 +236,12 @@ class RecipesService: ServiceBase {
                         formData.append(Data("\r\n".utf8))
                     }
                     
-                    formData.append(Data("--\(boundary)\r\n".utf8))
-                    formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].amount\"\r\n\r\n".utf8))
-                    formData.append(Data("\(ingredient.amount)".utf8))
-                    formData.append(Data("\r\n".utf8))
+                    if let amount = ingredient.amount {
+                        formData.append(Data("--\(boundary)\r\n".utf8))
+                        formData.append(Data("Content-Disposition: form-data; name=\"ingredients[\(index)].amount\"\r\n\r\n".utf8))
+                        formData.append(Data("\(amount)".utf8))
+                        formData.append(Data("\r\n".utf8))
+                    }
                     
                     if let totalCalories = ingredient.totalCalories {
                         formData.append(Data("--\(boundary)\r\n".utf8))
