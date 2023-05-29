@@ -51,4 +51,22 @@ class UsersService: ServiceBase {
         
         return response.data
     }
+    
+    func subscribeAsync(id: String) async -> Bool{
+        let request = GraphQlRequest(
+            query: """
+              mutation AddSubscription($dto: SubscriptionCreateDtoInput!) {
+                addSubscription(dto: $dto) {
+                  id
+                }
+              }
+            """,
+            variables: [
+                "dto": ["authorId" : id]
+            ]
+        )
+        let response: GraphQlResponse = await HttpClient.shared.queryAsync(request)
+        
+        return response.errors == nil
+    }
 }
