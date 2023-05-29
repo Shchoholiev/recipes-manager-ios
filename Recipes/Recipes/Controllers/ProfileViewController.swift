@@ -31,9 +31,12 @@ class ProfileViewController: UIViewController {
     
     var totalPages = 1
     
+    var chosenId: String?
+    
     var searchType: RecipesSearchTypes = .PERSONAL
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
@@ -125,23 +128,40 @@ extension ProfileViewController: UITableViewDataSource {
         
         return cell
     }
+    
+    @objc func showRecipe(_ id: String) {
+        chosenId = id
+        self.performSegue(withIdentifier: "showRecipe", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "showRecipe":
+            let view = segue.destination as! RecipeViewController
+            view.id = chosenId
+        default:
+            break
+        }
+    }
 }
 
-////MARK: - UITableViewDelegate
-//extension ProfileViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.row == recipes.count - 3 {
-//            if currentPage < totalPages {
-//                currentPage += 1
-//                addPage(pageNumber: currentPage)
-//            }
-//        }
-//    }
-//}
 
-////MARK: - ProfileCellDelegate
-//extension ProfileViewController: RecipeCellDelegate {
-//    func recipeCellDidTap(_ cell: RecipeCell) {
-//        showRecipe(cell.recipeId)
-//    }
-//}
+
+//MARK: - UITableViewDelegate
+extension ProfileViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == recipes.count - 3 {
+            if currentPage < totalPages {
+                currentPage += 1
+                addPage(pageNumber: currentPage)
+            }
+        }
+    }
+}
+
+//MARK: - ProfileCellDelegate
+extension ProfileViewController: RecipeCellDelegate {
+    func recipeCellDidTap(_ cell: RecipeCell) {
+        showRecipe(cell.recipeId)
+    }
+}
