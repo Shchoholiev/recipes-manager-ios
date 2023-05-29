@@ -420,14 +420,6 @@ class AddRecipeViewController: UIViewController {
 //        }
 //    }
     
-    func showAlert(title: String, message: String) {
-        let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in })
-        dialogMessage.addAction(ok)
-        
-        self.present(dialogMessage, animated: true, completion: nil)
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "showCategories":

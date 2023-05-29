@@ -1010,6 +1010,9 @@
                                         <buttonConfiguration key="configuration" style="filled" title="Login">
                                             <color key="baseBackgroundColor" name="AccentColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="loginButtonTapped:" destination="bAy-xD-syr" eventType="touchUpInside" id="BUi-nY-HFt"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1048,6 +1051,15 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2z0-V1-pHg"/>
+                    <connections>
+                        <outlet property="email" destination="nZ9-nZ-acc" id="ptP-mx-JUn"/>
+                        <outlet property="emailLabel" destination="XvH-wl-IPz" id="XP0-ez-LGk"/>
+                        <outlet property="loginButton" destination="Oex-va-sXZ" id="UyI-Dk-RON"/>
+                        <outlet property="password" destination="3xg-Ei-CTs" id="DfQ-Rz-Rkg"/>
+                        <outlet property="passwordLabel" destination="8Nq-q6-Op2" id="foe-EI-wIe"/>
+                        <outlet property="phone" destination="caM-97-Gu3" id="Y2D-hr-eQ1"/>
+                        <outlet property="phoneLabel" destination="4tz-sf-xkY" id="Fof-4Z-doW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yha-IS-hYb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
