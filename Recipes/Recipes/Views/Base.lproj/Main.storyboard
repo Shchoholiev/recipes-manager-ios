@@ -831,6 +831,9 @@
                                                 <buttonConfiguration key="configuration" style="filled" title="Create">
                                                     <color key="baseBackgroundColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="createButtonClicked:" destination="6Eu-Wb-eeU" eventType="touchUpInside" id="I1H-JI-BUU"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
@@ -913,6 +916,8 @@
                     <tabBarItem key="tabBarItem" title="Categories" image="list.bullet.rectangle.fill" catalog="system" id="zfz-Ys-fuU"/>
                     <navigationItem key="navigationItem" id="Tt1-2C-0nF"/>
                     <connections>
+                        <outlet property="categoryName" destination="36h-gk-93d" id="KC4-Cd-VxJ"/>
+                        <outlet property="createButton" destination="3B6-kr-qOM" id="Uqe-Wk-osm"/>
                         <outlet property="searchField" destination="Ckx-ST-xST" id="wgF-rz-Bpj"/>
                         <outlet property="tableView" destination="SQm-qv-6bT" id="KyQ-Sw-nA7"/>
                         <segue destination="aSO-cA-P6I" kind="unwind" identifier="unwindToAddRecipe" unwindAction="unwindToAddRecipe:" id="dTT-Kg-xHa"/>

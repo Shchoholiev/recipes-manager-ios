@@ -61,25 +61,25 @@ class CategoriesViewController: UIViewController {
     }
     
     func search(pageNumber: Int, filter: String) {
-        Task {
-            let categoriesPage = await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = categoriesPage {
-                categories = safePage.items
-                currentPage = pageNumber
-                totalPages = safePage.pagesCount
-                tableView.reloadData()
-            }
-        }
+//        Task {
+//            let categoriesPage = await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = categoriesPage {
+//                categories = safePage.items
+//                currentPage = pageNumber
+//                totalPages = safePage.pagesCount
+//                tableView.reloadData()
+//            }
+//        }
     }
     
     func addSearchPage(pageNumber: Int, filter: String) {
-        Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-            if let safePage = categoriesPage {
-                categories.append(contentsOf: safePage.items)
-                tableView.reloadData()
-            }
-        }
+//        Task {
+//            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
+//            if let safePage = categoriesPage {
+//                categories.append(contentsOf: safePage.items)
+//                tableView.reloadData()
+//            }
+//        }
     }
     
     @objc func showRecipesByCategory(sender: UIView) {
@@ -134,11 +134,12 @@ extension CategoriesViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let filter = searchField.text {
             currentPage = 1
-            if filter.isEmpty {
-                setPage(pageNumber: currentPage)
-            } else {
-                search(pageNumber: currentPage, filter: filter)
-            }
+            setPage(pageNumber: currentPage)
+//            if filter.isEmpty {
+//                setPage(pageNumber: currentPage)
+//            } else {
+//                search(pageNumber: currentPage, filter: filter)
+//            }
         }
         textField.endEditing(true)
         return true

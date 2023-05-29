@@ -9,6 +9,10 @@ import UIKit
 
 class ChooseCategoryViewController: UIViewController {
     
+    @IBOutlet weak var categoryName: UITextField!
+    
+    @IBOutlet weak var createButton: UIButton!
+    
     @IBOutlet weak var tableView: UITableView!
     
     @IBOutlet weak var searchField: UITextField!
@@ -86,22 +90,48 @@ class ChooseCategoryViewController: UIViewController {
     
     var chooseCategoryCallback: ((_ category: Category) -> Void)? = nil
     
-//    @objc func chooseCategory(sender: UIView) {
-//        let chosenCategory = categories.first(where: { $0.id == sender.tag } )
-//        if let safeCategory = chosenCategory, let callback = chooseCategoryCallback {
-//            callback(safeCategory)
-//        }
-//        performSegue(withIdentifier: "unwindToAddRecipe", sender: self)
-//    }
+    @IBAction func createButtonClicked(_ sender: UIButton) {
+        createButton.isEnabled = false
+        if let name = categoryName.text, !name.isEmpty {
+            let category = Category(id: "", name: name)
+            Task {
+                let result = await categoriesService.createCategory(category)
+                if let newCategory = result {
+                    chosenCategories.append(newCategory)
+                    if let chooseCallback = chooseCategoryCallback {
+                        chooseCallback(newCategory)
+                    }
+                    reset()
+                }
+            }
+        } else {
+            showAlert(title: "Name is missing", message: "Please enter category name.")
+        }
+    }
     
     @objc func deleteCategory(sender: UIView) {
-        let id = sender.tag
-        Task {
-            let succeeded = await categoriesService.deleteAsync(id: id)
-            if succeeded {
-                setPage(pageNumber: 1)
-            }
-        }
+//        let id = sender.tag
+//        Task {
+//            let succeeded = await categoriesService.deleteAsync(id: id)
+//            if succeeded {
+//                setPage(pageNumber: 1)
+//            }
+//        }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in })
+        dialogMessage.addAction(ok)
+        
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
+    func reset() {
+        categoryName.text = nil
+        createButton.isEnabled = true
+        setPage(pageNumber: 1)
+        tableView.reloadData()
     }
 }
 
