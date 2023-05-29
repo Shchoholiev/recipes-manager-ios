@@ -29,6 +29,8 @@ class RecipeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var menuButton: UIButton!
+    
     var id: String?
     
     var ingredients = [Ingredient]()
@@ -45,6 +47,7 @@ class RecipeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        menuButton.isHidden = true
         UIApplication.shared.isIdleTimerDisabled = true
         
         tableView.dataSource = self
@@ -76,7 +79,6 @@ class RecipeViewController: UIViewController {
                             thumbnail.image = UIImage(systemName: "photo")
                         }
                     }
-                    
                     if let safeIngredients = safeRecipe.ingredients, !safeIngredients.isEmpty {
                         ingredients = safeIngredients
                         tableView.reloadData()
@@ -95,6 +97,10 @@ class RecipeViewController: UIViewController {
                         savedButton.setImage(UIImage(systemName: "bookmark.slash.fill"), for:.normal)
                     }else{
                         savedButton.setImage(UIImage(systemName: "bookmark.fill"), for:.normal)
+                    }
+                    
+                    if recipe?.createdById != nil && !recipe!.createdById.isEmpty && recipe!.createdById == GlobalUser.shared.id {
+                        menuButton.isHidden = false
                     }
                 }
             }
@@ -181,6 +187,42 @@ class RecipeViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    @IBAction func menuButtonTapped(_ sender: Any) {
+        showMenuOptions()
+    }
+    
+    func showMenuOptions() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let editAction = UIAlertAction(title: "Edit Recipe", style: .default) { _ in
+            print("Option 1 selected")
+        }
+        alertController.addAction(editAction)
+
+        let deleteAction = UIAlertAction(title: "Delete Recipe", style: .destructive) { _ in
+            print("Option 2 selected")
+            let confirmationAlert = UIAlertController(title: "Confirmation", message: "Are you sure you want to delete this recipe?", preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "Yes", style: .destructive) { _ in
+                print("OK selected")
+            }
+            let cancelAction = UIAlertAction(title: "No", style: .cancel) { _ in
+                print("Cancel selected")
+            }
+            
+            confirmationAlert.addAction(okAction)
+            confirmationAlert.addAction(cancelAction)
+            self.present(confirmationAlert, animated: true, completion: nil)
+        }
+        alertController.addAction(deleteAction)
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+        }
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 
