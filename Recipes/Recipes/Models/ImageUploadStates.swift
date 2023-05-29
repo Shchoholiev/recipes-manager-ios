@@ -7,8 +7,24 @@
 
 import Foundation
 
-enum ImageUploadStates : Codable {
-    case Started
-    case Uploaded
-    case Failed
+enum ImageUploadStates : Int, Codable {
+    case Started = 0
+    case Uploaded = 1
+    case Failed = 2
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(Int.self)
+        
+        switch rawValue {
+        case 0:
+            self = .Started
+        case 1:
+            self = .Uploaded
+        case 2:
+            self = .Failed
+        default:
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid status value")
+        }
+    }
 }

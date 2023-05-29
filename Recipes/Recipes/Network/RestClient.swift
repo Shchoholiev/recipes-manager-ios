@@ -29,6 +29,9 @@ class RestClient {
         return try await sendAsync(path, data, .put)
     }
     
+    func putAsync<TOut: Decodable>(_ path: String, _ formData: Data, _ contentType: String) async throws -> TOut {
+        return try await sendAsync(path, formData, contentType, .put)
+    }
     
     private func sendAsync<TIn: Encodable, TOut: Decodable>(_ path: String, _ data: TIn, _ httpMethod: HttpMethod) async throws -> TOut {
         do {

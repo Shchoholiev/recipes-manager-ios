@@ -52,6 +52,11 @@ class HttpClient {
         return try await restClient.putAsync(path, data)
     }
     
+    func putAsync<TOut: Decodable>(_ path: String, _ formData: Data, _ contentType: String) async throws -> TOut {
+        await self.checkAccessTokenAsync()
+        return try await restClient.putAsync(path, formData, contentType)
+    }
+    
     func readSSE<TIn: Encodable, TOut: Decodable>(_ path: String, _ httpMethod: HttpMethod, _ data: TIn) async throws -> AsyncStream<TOut> {
         await self.checkAccessTokenAsync()
         let stream = AsyncStream<TOut> { continuation in
