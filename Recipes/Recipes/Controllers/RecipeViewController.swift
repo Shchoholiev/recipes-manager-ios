@@ -114,6 +114,10 @@ class RecipeViewController: UIViewController {
         containerHeight.constant = scrollHeight
     }
     
+    @objc func showAuthor() {
+        self.performSegue(withIdentifier: "showAuthor", sender: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier {
         case "showAddRecipe":
@@ -124,6 +128,13 @@ class RecipeViewController: UIViewController {
             }
             view.viewDidLoad()
             view.render()
+            
+        case "showAuthor":
+            let view = segue.destination as! AuthorViewController
+            if let id = recipe?.createdById{
+                view.userId = id
+            }
+            view.viewDidLoad()
             
         case "unwindToRecipes":
             let view = segue.destination as! RecipesViewController
@@ -177,6 +188,9 @@ class RecipeViewController: UIViewController {
                 }
             }
         }
+    }
+    @IBAction func authorButtonPushed(_ sender: UIButton) {
+        showAuthor()
     }
     
     @IBAction func menuButtonTapped(_ sender: Any) {

@@ -90,6 +90,21 @@ class ProfileViewController: UIViewController {
             }
         }
     }
+    
+    @objc func showRecipe(_ id: String) {
+        chosenId = id
+        self.performSegue(withIdentifier: "showRecipe", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "showRecipe":
+            let view = segue.destination as! RecipeViewController
+            view.id = chosenId
+        default:
+            break
+        }
+    }
 }
 
 
@@ -127,21 +142,6 @@ extension ProfileViewController: UITableViewDataSource {
         }
         
         return cell
-    }
-    
-    @objc func showRecipe(_ id: String) {
-        chosenId = id
-        self.performSegue(withIdentifier: "showRecipe", sender: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "showRecipe":
-            let view = segue.destination as! RecipeViewController
-            view.id = chosenId
-        default:
-            break
-        }
     }
 }
 

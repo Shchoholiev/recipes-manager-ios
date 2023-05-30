@@ -2,7 +2,7 @@
 //  AuthorViewController.swift
 //  Recipes
 //
-//  Created by Виталий Красноруцкий on 30.05.23.
+//  Created by Vitalii Krasnorutskyi on 30.05.23.
 //
 
 import UIKit
@@ -40,19 +40,19 @@ class AuthorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.dataSource = self
         tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
         
         phoneTextField.isEnabled = false
         emailTextField.isEnabled = false
         Task{
-            let user = await self.usersServise.getCurrentUserAsync()
-            if let safeUser = user{
-                nameLabel.text = safeUser.name
-                phoneTextField.placeholder = safeUser.phone
-                emailTextField.placeholder = safeUser.email
-                userId = safeUser.id
+            if let safeId = userId{
+                let user = await self.usersServise.getUserAsync(id: safeId)
+                if let safeUser = user{
+                    nameLabel.text = safeUser.name
+                    phoneTextField.placeholder = safeUser.phone
+                    emailTextField.placeholder = safeUser.email
+                }
             }
         }
     }
@@ -90,6 +90,33 @@ class AuthorViewController: UIViewController {
                     tableView.reloadData()
                 }
             }
+        }
+    }
+    
+    @IBAction func SubscribeButtonPushed(_ sender: UIButton) {
+        Task{
+            if let safeId = userId{
+                sender.isEnabled = false
+                var result = await usersServise.subscribeAsync(id:safeId)
+                if !result{
+                    sender.isEnabled = true
+                }
+            }
+        }
+    }
+    
+    @objc func showRecipe(_ id: String) {
+        chosenId = id
+        self.performSegue(withIdentifier: "showRecipe", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "showRecipe":
+            let view = segue.destination as! RecipeViewController
+            view.id = chosenId
+        default:
+            break
         }
     }
 }
@@ -131,20 +158,6 @@ extension AuthorViewController: UITableViewDataSource {
         return cell
     }
     
-    @objc func showRecipe(_ id: String) {
-        chosenId = id
-        self.performSegue(withIdentifier: "showRecipe", sender: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "showRecipe":
-            let view = segue.destination as! RecipeViewController
-            view.id = chosenId
-        default:
-            break
-        }
-    }
 }
 
 
