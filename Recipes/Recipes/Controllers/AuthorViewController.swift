@@ -9,14 +9,13 @@ import UIKit
 
 class AuthorViewController: UIViewController {
 
-    
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var phoneTextField: UITextField!
     
     @IBOutlet weak var emailTextField: UITextField!
     
-    @IBOutlet weak var tableView: UITableView!
+   @IBOutlet weak var tableView: UITableView!
     
     let usersServise = UsersService()
     
@@ -40,11 +39,7 @@ class AuthorViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
-        tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
         
-        phoneTextField.isEnabled = false
-        emailTextField.isEnabled = false
         Task{
             if let safeId = userId{
                 let user = await self.usersServise.getUserAsync(id: safeId)
@@ -52,6 +47,11 @@ class AuthorViewController: UIViewController {
                     nameLabel.text = safeUser.name
                     phoneTextField.placeholder = safeUser.phone
                     emailTextField.placeholder = safeUser.email
+                    tableView.dataSource = self
+                    tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
+                    
+                    phoneTextField.isEnabled = false
+                    emailTextField.isEnabled = false
                 }
             }
         }
