@@ -1,21 +1,21 @@
 //
-//  ProfileViewController.swift
+//  AuthorViewController.swift
 //  Recipes
 //
-//  Created by Serhii Shchoholiev on 5/28/23.
+//  Created by Vitalii Krasnorutskyi on 30.05.23.
 //
 
 import UIKit
 
-class ProfileViewController: UIViewController {
-    
-    @IBOutlet weak var nameTextField: UITextField!
+class AuthorViewController: UIViewController {
+
+    @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var phoneTextField: UITextField!
     
     @IBOutlet weak var emailTextField: UITextField!
     
-    @IBOutlet weak var tableView: UITableView!
+   @IBOutlet weak var tableView: UITableView!
     
     let usersServise = UsersService()
     
@@ -33,35 +33,37 @@ class ProfileViewController: UIViewController {
     
     var chosenId: String?
     
-    var searchType: RecipesSearchTypes = .PERSONAL
+    var userId: String?
+    
+    var searchType: RecipesSearchTypes = .PUBLIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
-        
-        nameTextField.isEnabled = false
-        phoneTextField.isEnabled = false
-        emailTextField.isEnabled = false
         Task{
-            let user = await self.usersServise.getCurrentUserAsync()
-            if let safeUser = user{
-                nameTextField.placeholder = safeUser.name
-                phoneTextField.placeholder = safeUser.phone
-                emailTextField.placeholder = safeUser.email
+            if let safeId = userId{
+                let user = await self.usersServise.getUserAsync(id: safeId)
+                if let safeUser = user{
+                    nameLabel.text = safeUser.name
+                    phoneTextField.placeholder = safeUser.phone
+                    emailTextField.placeholder = safeUser.email
+                    tableView.dataSource = self
+                    tableView.register(UINib(nibName: "RecipeCell", bundle: nil), forCellReuseIdentifier: "RecipeCell")
+                    
+                    phoneTextField.isEnabled = false
+                    emailTextField.isEnabled = false
+                }
             }
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        nameTextField.text = GlobalUser.shared.name
         setPage(pageNumber: 1)
     }
     
     func setPage(pageNumber: Int) {
         Task {
-            if let safeId = GlobalUser.shared.id{
+            if let safeId = userId{
                 let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: "", authorId: safeId)
                 if let safePage = recipesPage {
                     recipes = safePage.items
@@ -80,12 +82,24 @@ class ProfileViewController: UIViewController {
     
     func addPage(pageNumber: Int) {
         Task {
-            if let safeId = GlobalUser.shared.id{
+            if let safeId = userId{
                 let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, searchType: searchType, search: "", authorId: safeId)
                 if let safePage = recipesPage {
                     recipes.append(contentsOf: safePage.items)
                     totalPages = safePage.totalPages
                     tableView.reloadData()
+                }
+            }
+        }
+    }
+    
+    @IBAction func SubscribeButtonPushed(_ sender: UIButton) {
+        Task{
+            if let safeId = userId{
+                sender.isEnabled = false
+                var result = await usersServise.subscribeAsync(id:safeId)
+                if !result{
+                    sender.isEnabled = true
                 }
             }
         }
@@ -110,7 +124,7 @@ class ProfileViewController: UIViewController {
 
 
 //MARK: - UITableViewDataSource
-extension ProfileViewController: UITableViewDataSource {
+extension AuthorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return recipes.count
@@ -143,12 +157,13 @@ extension ProfileViewController: UITableViewDataSource {
         
         return cell
     }
+    
 }
 
 
 
 //MARK: - UITableViewDelegate
-extension ProfileViewController: UITableViewDelegate {
+extension AuthorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == recipes.count - 3 {
             if currentPage < totalPages {
@@ -160,7 +175,7 @@ extension ProfileViewController: UITableViewDelegate {
 }
 
 //MARK: - ProfileCellDelegate
-extension ProfileViewController: RecipeCellDelegate {
+extension AuthorViewController: RecipeCellDelegate {
     func recipeCellDidTap(_ cell: RecipeCell) {
         showRecipe(cell.recipeId)
     }
