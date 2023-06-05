@@ -32,6 +32,10 @@ class LoginViewController: UIViewController {
         password.delegate = self
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     @IBAction func loginButtonTapped(_ sender: UIButton) {
         sender.isEnabled = false
         
