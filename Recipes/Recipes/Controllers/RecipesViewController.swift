@@ -177,7 +177,7 @@ extension RecipesViewController: UITextFieldDelegate {
 //MARK: - UITableViewDelegate
 extension RecipesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == recipes.count - 3 {
+        if indexPath.row == recipes.count - 5 {
             if currentPage < totalPages {
                 currentPage += 1
                 addPage(pageNumber: currentPage)
