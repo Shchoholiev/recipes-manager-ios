@@ -32,6 +32,10 @@ class LoginViewController: UIViewController {
         password.delegate = self
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
     @IBAction func loginButtonTapped(_ sender: UIButton) {
         sender.isEnabled = false
         
@@ -116,6 +120,35 @@ class LoginViewController: UIViewController {
         emailLabel.text = "Email"
         phoneLabel.text = "Phone"
         passwordLabel.text = "Password"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChange(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc func keyboardWillHide() {
+        self.view.frame.origin.y = 0
+    }
+
+    @objc func keyboardWillChange(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            var offset = CGFloat()
+            if phone.isFirstResponder {
+                let textFieldFrame = phone.convert(phone.bounds, to: self.view)
+                offset = textFieldFrame.maxY - (self.view.frame.height - keyboardHeight)
+            }
+            if password.isFirstResponder {
+                let textFieldFrame = password.convert(password.bounds, to: self.view)
+                offset = textFieldFrame.maxY - (self.view.frame.height - keyboardHeight)
+            }
+            
+            self.view.frame.origin.y = -offset
+        }
     }
 }
 

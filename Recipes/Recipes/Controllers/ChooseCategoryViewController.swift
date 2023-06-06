@@ -40,7 +40,9 @@ class ChooseCategoryViewController: UIViewController {
     
     func setPage(pageNumber: Int) {
         Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
+            let search = searchField.text ?? ""
+            print(search)
+            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, search: search)
             if let safePage = categoriesPage {
                 categories = safePage.items
                 currentPage = pageNumber
@@ -57,35 +59,14 @@ class ChooseCategoryViewController: UIViewController {
     
     func addPage(pageNumber: Int) {
         Task {
-            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber)
+            let search = searchField.text ?? ""
+            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, search: search)
             if let safePage = categoriesPage {
                 categories.append(contentsOf: safePage.items)
                 totalPages = safePage.totalPages
                 tableView.reloadData()
             }
         }
-    }
-    
-    func search(pageNumber: Int, filter: String) {
-        Task {
-//            let categoriesPage = await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-//            if let safePage = categoriesPage {
-//                categories = safePage.items
-//                currentPage = pageNumber
-//                totalPages = safePage.pagesCount
-//                tableView.reloadData()
-//            }
-        }
-    }
-    
-    func addSearchPage(pageNumber: Int, filter: String) {
-//        Task {
-//            let categoriesPage =  await categoriesService.getPageAsync(pageNumber: pageNumber, filter: filter)
-//            if let safePage = categoriesPage {
-//                categories.append(contentsOf: safePage.items)
-//                tableView.reloadData()
-//            }
-//        }
     }
     
     var chooseCategoryCallback: ((_ category: Category) -> Void)? = nil
@@ -167,14 +148,8 @@ extension ChooseCategoryViewController: UITableViewDelegate {
 extension ChooseCategoryViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let filter = searchField.text {
-            currentPage = 1
-            if filter.isEmpty {
-                setPage(pageNumber: currentPage)
-            } else {
-                search(pageNumber: currentPage, filter: filter)
-            }
-        }
+        currentPage = 1
+        setPage(pageNumber: currentPage)
         textField.endEditing(true)
         return true
     }

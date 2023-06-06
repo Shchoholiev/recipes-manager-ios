@@ -10,6 +10,8 @@ import Photos
 
 class AddRecipeViewController: UIViewController {
     
+    @IBOutlet weak var titleLabel: UILabel!
+    
     @IBOutlet weak var name: UITextField!
     
     @IBOutlet weak var thumbnail: UIImageView!
@@ -73,6 +75,7 @@ class AddRecipeViewController: UIViewController {
     override func viewDidLoad(){
         super.viewDidLoad()
         self.hideKeyboardWhenTappedAround()
+        self.view.frame.origin.y = 0
         
         thumbnail.layer.borderWidth = 1
         thumbnail.layer.borderColor = CGColor(gray: 0.3, alpha: 1)
@@ -104,14 +107,18 @@ class AddRecipeViewController: UIViewController {
         categoriesTableView.dataSource = self
         categoriesTableView.register(UINib(nibName: "CategoryChooseCell", bundle: nil), forCellReuseIdentifier: "CategoryChooseCell")
         categoriesTableView.register(UINib(nibName: "ButtonCell", bundle: nil), forCellReuseIdentifier: "ButtonCell")
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        switchIngredientsView(showText)
+//        parseIngredientsButton.isEnabled = false
+//        showTextButton.isEnabled = false
     }
     
     func render() {
         if isUpdate {
+            titleLabel.text = "Update Recipe"
             createButton.setTitle("Update recipe", for: .normal)
         } else {
+            titleLabel.text = "Add Recipe"
             createButton.setTitle("Create recipe", for: .normal)
         }
         
@@ -161,16 +168,13 @@ class AddRecipeViewController: UIViewController {
                         }
                     }
                     
-            //        if recipe?.ingredientsText == nil{
-            //            parseIngredientsButton.isEnabled = false
-            //            if showText {
-            //                showTextButton.isEnabled = false
-            //            }
-            //        }
-            //
-            //        if ingredients.isEmpty && !showText {
-            //            showTextButton.isEnabled = false
-            //        }
+//                    if recipe?.ingredientsText == nil {
+//                        parseIngredientsButton.isEnabled = false
+//                    }
+//
+//                    if ingredients.isEmpty && !showText {
+//                        showTextButton.isEnabled = false
+//                    }
                 }
             }
         }
@@ -410,15 +414,25 @@ class AddRecipeViewController: UIViewController {
 
     @objc func keyboardWillChange(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            var offset = CGFloat()
             if calories.isFirstResponder {
-                self.view.frame.origin.y = -keyboardSize.height
+                let textFieldFrame = calories.convert(calories.bounds, to: self.view)
+                offset = textFieldFrame.maxY - (self.view.frame.height - keyboardHeight)
             }
             if servings.isFirstResponder {
-                self.view.frame.origin.y = -keyboardSize.height
+                let textFieldFrame = servings.convert(servings.bounds, to: self.view)
+                offset = textFieldFrame.maxY - (self.view.frame.height - keyboardHeight)
             }
             if cookingTime.isFirstResponder {
-                self.view.frame.origin.y = -keyboardSize.height
+                let textFieldFrame = cookingTime.convert(cookingTime.bounds, to: self.view)
+                offset = textFieldFrame.maxY - (self.view.frame.height - keyboardHeight)
             }
+            if isUpdate {
+                offset += 20
+            }
+            
+            self.view.frame.origin.y = -offset
         }
     }
     
@@ -474,6 +488,10 @@ class AddRecipeViewController: UIViewController {
         }
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+
     
 //    @objc func keyboardWillShow(notification: NSNotification) {
 //        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -508,7 +526,6 @@ extension AddRecipeViewController: UIImagePickerControllerDelegate, UINavigation
 extension AddRecipeViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        setImage()
         textField.endEditing(true)
         return true
     }

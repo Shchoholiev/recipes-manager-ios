@@ -40,29 +40,29 @@ class RecipesByCategoryViewController: UIViewController {
     }
     
     func setPage(pageNumber: Int) {
-        Task {
-            if let safeCategory = category {
-                let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, categoryId: safeCategory.id)
-                if let safePage = recipesPage {
-                    recipes = safePage.items
-                    currentPage = pageNumber
-                    totalPages = safePage.pagesCount
-                    tableView.reloadData()
-                }
-            }
-        }
+//        Task {
+//            if let safeCategory = category {
+//                let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, categoryId: safeCategory.id)
+//                if let safePage = recipesPage {
+//                    recipes = safePage.items
+//                    currentPage = pageNumber
+//                    totalPages = safePage.pagesCount
+//                    tableView.reloadData()
+//                }
+//            }
+//        }
     }
     
     func addPage(pageNumber: Int) {
-        Task {
-            if let safeCategory = category {
-                let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, categoryId: safeCategory.id)
-                if let safePage = recipesPage {
-                    recipes.append(contentsOf: safePage.items)
-                    tableView.reloadData()
-                }
-            }
-        }
+//        Task {
+//            if let safeCategory = category {
+//                let recipesPage = await recipesService.getPageAsync(pageNumber: pageNumber, categoryId: safeCategory.id)
+//                if let safePage = recipesPage {
+//                    recipes.append(contentsOf: safePage.items)
+//                    tableView.reloadData()
+//                }
+//            }
+//        }
     }
     
     @objc func showRecipe(sender: UIView) {
