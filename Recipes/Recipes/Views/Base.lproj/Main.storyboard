@@ -1356,7 +1356,7 @@
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                     </textField>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" pagingEnabled="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SQm-qv-6bT">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="SQm-qv-6bT">
                                         <rect key="frame" x="0.0" y="206.33333333333331" width="378" height="590.66666666666674"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </tableView>
@@ -1444,7 +1444,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="HdQ-vE-8xd"/>
-        <segue reference="Y9c-ah-NOd"/>
+        <segue reference="HZl-Od-Rg4"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="book.closed.fill" catalog="system" width="115" height="128"/>

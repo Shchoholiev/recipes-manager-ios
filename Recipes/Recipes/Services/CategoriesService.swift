@@ -9,11 +9,11 @@ import Foundation
 
 class CategoriesService {
     
-    func getPageAsync(pageNumber: Int = 1, pageSize: Int = 10) async -> PagedList<Category>? {
+    func getPageAsync(pageNumber: Int = 1, pageSize: Int = 10, search: String = "") async -> PagedList<Category>? {
         let request = GraphQlRequest(
             query: """
-               query Categories($pageNumber: Int!, $pageSize: Int!) {
-                 categories(pageNumber: $pageNumber, pageSize: $pageSize) {
+               query SearchCategories($pageNumber: Int!, $pageSize: Int!, $search: String!) {
+                 searchCategories(pageNumber: $pageNumber, pageSize: $pageSize, search: $search) {
                    items {
                      id
                      name
@@ -24,31 +24,14 @@ class CategoriesService {
             """,
             variables: [
                 "pageNumber": pageNumber,
-                "pageSize": pageSize
+                "pageSize": pageSize,
+                "search": search
             ]
         )
-        let response: GraphQlGenericResponse<PagedList<Category>> = await HttpClient.shared.queryAsync(request, propertyName: "categories")
+        let response: GraphQlGenericResponse<PagedList<Category>> = await HttpClient.shared.queryAsync(request, propertyName: "searchCategories")
     
         return response.data;
     }
-    
-//    func getPageAsync(pageNumber: Int, filter: String) async -> PaginationWrapper<CategoryOld>? {
-//        let encodedFilter = filter.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed)
-//        if let safeFilter = encodedFilter {
-//            let url = URL(string: "\(baseUrl)/page/\(pageNumber)/\(safeFilter)")
-//            if let safeUrl = url {
-//                do {
-//                    let (data, _) = try await URLSession.shared.data(from: safeUrl)
-//                    let categories = try JSONDecoder().decode(PaginationWrapper<CategoryOld>.self, from: data)
-//                    return categories
-//                } catch {
-//                    print(error)
-//                }
-//            }
-//        }
-//
-//        return nil
-//    }
     
     func createCategory(_ category: Category) async -> Category? {
         let request = GraphQlRequest(
