@@ -47,9 +47,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-    func showLoginScreen() {
+    func showLoginScreen(callback: (() -> ())?) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        loginViewController.callback = callback
         
         if let rootViewController = window?.rootViewController {
             rootViewController.present(loginViewController, animated: true, completion: nil)

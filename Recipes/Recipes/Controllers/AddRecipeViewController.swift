@@ -438,13 +438,18 @@ class AddRecipeViewController: UIViewController {
     
     func reset() {
         name.text = ""
-//        thumbnailLink.text = ""
-//        ingredients.text = ""
-//        text.text = ""
-//        selectedCategoryId = 0
-//        selectedCategoryText.text = "None"
         thumbnail.contentMode = .center
         thumbnail.image = UIImage(systemName: "photo")
+        ingredientsText.text = ""
+        content.text = ""
+        ingredients = []
+        categories = []
+        ingredientsTableView.reloadData()
+        categoriesTableView.reloadData()
+        calories.text = ""
+        servings.text = ""
+        cookingTime.text = ""
+        isPublicSwitch.isOn = false
     }
     
     @IBAction func unwindToAddRecipe( _ seg: UIStoryboardSegue) {}

@@ -26,6 +26,7 @@
 		9045BA9E2A24EE190038530F /* LoginModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BA9D2A24EE190038530F /* LoginModel.swift */; };
 		9045BAA12A24FC4E0038530F /* GlobalUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9045BAA02A24FC4E0038530F /* GlobalUser.swift */; };
 		9051BFD02A2432BE001D27E2 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9051BFCF2A2432BE001D27E2 /* Ingredient.swift */; };
+		905D4DA02AA530CD00656496 /* LoadingScreenController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905D4D9F2AA530CD00656496 /* LoadingScreenController.swift */; };
 		9084E828297D9F9700A08F28 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */; };
 		90A259A3293FF4050017E68B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A259A2293FF4050017E68B /* AppDelegate.swift */; };
 		90A259A5293FF4050017E68B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A259A4293FF4050017E68B /* SceneDelegate.swift */; };
@@ -89,6 +90,7 @@
 		9045BA9D2A24EE190038530F /* LoginModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModel.swift; sourceTree = "<group>"; };
 		9045BAA02A24FC4E0038530F /* GlobalUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalUser.swift; sourceTree = "<group>"; };
 		9051BFCF2A2432BE001D27E2 /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
+		905D4D9F2AA530CD00656496 /* LoadingScreenController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreenController.swift; sourceTree = "<group>"; };
 		9084E827297D9F9700A08F28 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
 		90A2599F293FF4050017E68B /* Recipes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recipes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		90A259A2293FF4050017E68B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				9045BA962A244C860038530F /* ProfileViewController.swift */,
 				9045BA982A24539B0038530F /* LoginViewController.swift */,
 				FE8EC0D72A256E4600C700C8 /* AuthorViewController.swift */,
+				905D4D9F2AA530CD00656496 /* LoadingScreenController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -458,6 +461,7 @@
 				FE8EC0D42A2550CA00C700C8 /* UsersService.swift in Sources */,
 				90B98ADC2A16EFDD0091D7E5 /* Category.swift in Sources */,
 				9084E828297D9F9700A08F28 /* ChooseCategoryViewController.swift in Sources */,
+				905D4DA02AA530CD00656496 /* LoadingScreenController.swift in Sources */,
 				90AA9ADA2A23E67800AFAA67 /* IngredientsService.swift in Sources */,
 				90A259C1293FFB9D0017E68B /* Recipe.swift in Sources */,
 				90A259A5293FF4050017E68B /* SceneDelegate.swift in Sources */,
@@ -630,7 +634,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.shchoholiev.Recipes-Manager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -662,7 +666,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.3.1;
+				MARKETING_VERSION = 0.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.shchoholiev.Recipes-Manager";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

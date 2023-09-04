@@ -23,6 +23,8 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginButton: UIButton!
     
+    var callback: (() -> ())?
+    
     let authService = AuthSerice()
     
     override func viewDidLoad() {
@@ -52,8 +54,7 @@ class LoginViewController: UIViewController {
             let user = LoginModel(email: email.text, phone: phone.text, password: password)
             let isSuccessful = await authService.login(user)
             if isSuccessful {
-                dismiss(animated: true, completion: nil)
-                reset()
+                dismiss()
                 sender.isEnabled = true
             } else {
                 showAlert(title: "Unsuccessful login", message: "Please review the data you provided")
@@ -63,8 +64,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginAsGuestTapped(_ sender: UIButton) {
         authService.loginAsGuest()
-        dismiss(animated: true, completion: nil)
-        reset()
+        dismiss()
     }
     
     func isValidEmail(email: String) -> Bool {
@@ -111,6 +111,18 @@ class LoginViewController: UIViewController {
         }
         
         return isValid
+    }
+    
+    func dismiss() {
+        dismiss(animated: true, completion: nil)
+        
+        Task {
+            try await Task.sleep(nanoseconds: UInt64(10_000_000))  // Sleep for 0.01 second
+            if let callbackFunction = callback {
+                callbackFunction()
+            }
+            reset()
+        }
     }
     
     func reset() {
